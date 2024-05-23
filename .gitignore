@@ -17,6 +17,8 @@ api/QRs/*
 api/sessions/*
 api/sessions/
 api/files/contacts/*
+api/dist
+api/dist/*
 .vscode/*
 !.vscode/extensions.json
 .idea
