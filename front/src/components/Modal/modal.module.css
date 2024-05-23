@@ -1,0 +1,139 @@
+.modalBg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width:100vw;
+    height: 100vh;
+    background-color: #3338;
+    place-content: center;
+}
+.show{
+    animation: show-modal .1s linear forwards;
+}
+.hidden{
+    animation: hidden-modal .1s linear forwards;
+}
+.isFirstRender{
+    animation: none;
+    display: none;
+}
+@keyframes show-modal {
+    from {
+        display: none;
+        opacity: 0;
+    }
+    to {
+        display: grid;
+        opacity: 1;
+    }
+}
+@keyframes hidden-modal {
+    from {
+        display: grid;
+        opacity: 1;
+    }
+    to {
+        display: none;
+        opacity: 0;
+    }
+}
+
+.modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    gap: 8px;
+    min-height: 80px;
+}
+.xs{
+    width: 360px;
+}
+.sm{
+    width: 400px;
+}
+.md{
+    width: 480px;
+}
+.lg{
+    width: 560px;
+}
+.xl{
+    width: 720px;
+}
+.fullWidth{
+    width: 95vw;
+    height: 95vh;
+}
+.close{
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: #666;
+    &:hover{
+        color: #555;
+    }
+}
+.header{
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    display: flex;
+    flex-direction: row;
+    order: 1;
+}
+.footer{
+    height: 50px;
+    line-height: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    order: 3;
+}
+.action{
+    background-color: var(--active-button-primary-color);
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    user-select: none;
+    transition: filter .1s linear;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    text-transform: capitalize;
+    font-size: 16px;
+    &:hover{
+        filter: brightness(110%);
+    }
+    &:active{
+        filter: brightness(90%);
+    }
+}
+.body{
+    order: 2;
+    flex-grow: 1;
+    overflow-y: scroll;
+    scrollbar-base-color: #444;
+    scrollbar-width: thin;
+}
+.center {
+    justify-content: center;
+}
+.start{
+    justify-content: start;
+}
+.end{
+    justify-content: end;
+}

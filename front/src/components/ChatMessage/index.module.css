@@ -1,0 +1,92 @@
+.container{
+    display: flex;
+    justify-content: left;
+    &:has(>.outgoing){
+        justify-content: right;
+    }
+    &:has(>.load){
+        justify-content: center;
+    }
+
+}
+.message{
+    padding: 10px;
+    margin: 6px;
+    border-radius: 7px 7px 0px 7px;
+    background-color: #369eff;
+    max-width: 60%;
+    min-width: 30%;
+    animation: up .25s ease forwards;
+    &.whatsapp{
+        background-color: #176b5b;
+    }
+    & .messageUsername{
+        display: flex;
+        justify-content: end;
+        transform: translateY(-10px);
+        & span {
+            width: fit-content;
+            font-size: 12px;
+        }
+    }
+}
+.message.incoming{
+    padding-right: 10px;
+    border-radius: 7px 7px 7px 0px;
+    background-color: #697076;
+}
+.message.load{
+    background-color: #44474a;
+    gap: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    min-width: none;
+    height: 50px;
+    & span{
+        display: block;
+        background-color: #fff;
+        border-radius: 50%;
+        width: 15px;
+        aspect-ratio: 1;
+        animation: bounce .3s ease-in-out infinite alternate;
+    }
+}
+.container p, .container span{
+    color: white;
+    width: 100%;
+    text-wrap:pretty;
+    word-break: break-word;
+}
+@media(width > 1280px){
+    .container p{
+        font-size: 20px;
+    }
+}
+@media(width > 1440px){
+    .container p{
+        font-size: 24px;
+    }
+}
+@keyframes up {
+    0% {
+        opacity: 0;
+        transform: scaleY(0.5);
+    }
+
+    50%{
+        opacity: 1;
+    }
+    100%{
+        transform: scaleY(1);
+    }
+}
+@keyframes bounce{
+    from {
+        transform: translateY(10) ;
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}

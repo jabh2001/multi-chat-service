@@ -1,0 +1,67 @@
+.container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.listItem {
+    position: relative;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    --bg:#ddd;
+    --line:#ddd;
+    --text:#444;
+
+
+    &.active{
+        --bg:var(--active-button-primary-color);
+        --text:#f8f8f8;
+    }
+    &:has(+.active){
+        --line:var(--active-button-primary-color);
+    }
+
+    > .numberContainer {
+        display: flex;
+        align-items: center;
+
+        > .number {
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 32px;
+            height: 32px;
+            background-color: var(--bg);
+            color: var(--text);
+            border-radius: 9999px;
+            border: 0;
+            background-clip: padding-box;
+        }
+        > .divider {
+            display: flex;
+            width: 100%;
+            background-color: var(--line);
+            height: 1px;
+        }
+    }
+    > .content {
+       margin-top: 0.75rem;
+       padding-right: 2rem;
+       > h3 {
+           font-size: 1.125rem;
+           font-weight: 600;
+           color: #4a5568;
+       }
+       
+       > p {
+           font-size: 1rem;
+           font-weight: 400;
+           color: #718096;
+       }
+    }
+}
+
+
+
+

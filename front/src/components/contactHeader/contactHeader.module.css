@@ -1,0 +1,39 @@
+.contactHeader{
+    width: inherit;
+    display: block;
+    min-height: max-content;
+}
+.headerContainer{
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+}
+.headerInfo{
+    height: 100%;
+    margin: 0;
+}
+.headerInfo h3{
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-size: 1.5rem;
+}
+.headerInfo p{
+    font-size: 1.25rem;
+    color: #595d5f;
+}
+.inboxName{
+    display: flex;
+}
+.textButtons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.textButtons button{
+    font-size: 20px;
+}
+#closeDetail p{
+    margin-left: 10px;
+    color: blue;
+}

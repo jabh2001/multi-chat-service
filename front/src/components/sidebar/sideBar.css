@@ -1,0 +1,104 @@
+.sideBar {
+  width: 100%;
+  padding-top: 30px;
+  padding-inline: 7px;
+}
+
+.avatarSideBar {
+  margin: 0px;
+  margin-top: 0;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: white;
+}
+#contactName {
+  color: white;
+}
+.info p {
+  color: #a3a4a6;
+}
+.info button {
+  border: none;
+  background-color: transparent;
+}
+#delete {
+  cursor: pointer;
+  background-color: rgb(172, 43, 43);
+}
+#edit {
+  cursor: pointer;
+  background-color: #0f376b;
+}
+#message {
+  cursor: pointer;
+  background-color: #2492f4;
+}
+#hide {
+  cursor: pointer;
+  background-color: #4d5055;
+}
+.actionButton {
+  width: 30px;
+  height: 30px;
+  color: white;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 5vh;
+  margin: 0;
+  margin-top: 5px;
+  padding: 1vh;
+  background-color: #25292c;
+  > p {
+    color: white;
+  }
+}
+
+.asigned {
+  display: block;
+  text-align: left;
+}
+.asigned h4 {
+  margin: 0;
+  color: white;
+}
+
+.agentName {
+  display: flex;
+  text-align: right;
+  align-items: center;
+  margin: 0;
+  width: 60%;
+  height: 5vh;
+  border: 2px solid rgb(128, 126, 126);
+  > p {
+    color: white;
+    text-align: right;
+  }
+}
+.identificador {
+    
+  color: white;
+  border-radius: 100%;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15%;
+  height: 100%;
+  background-color: #0f376b;
+}
+.buttons {
+  display: flex;
+  gap: 8px;
+}

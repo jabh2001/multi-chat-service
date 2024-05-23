@@ -1,0 +1,27 @@
+.prevPageButton{
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    --col: var(--active-button-primary-color) ;
+    filter: drop-shadow(0px 0px 5px var(--col));
+    min-height: 40px;
+    &:hover{
+        cursor: pointer;
+    }
+    
+    & button {
+        background-color: transparent;
+        border: none;
+        outline: none;
+    }
+    & svg{
+        width: 24px;
+        transform: rotate(-90deg);
+        fill: var(--col);
+        cursor: pointer;
+    }
+    & h2 {
+        color: var(--col);
+
+    }
+}

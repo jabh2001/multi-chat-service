@@ -1,0 +1,25 @@
+.container{
+    position: relative;
+}
+.open{
+    width: 400px;
+    transition: all 1s;
+}
+.closeButton{
+    position: absolute;
+    width: 50px;
+    aspect-ratio: 1;
+    left: -50px;
+    top: 0;
+    color: #000;
+    font-weight: bold;
+    background-color: #fff;
+    border: none;
+    outline: none;
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
+}
+.child{
+    padding-inline: 10px;
+}

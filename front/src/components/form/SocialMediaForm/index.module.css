@@ -1,0 +1,19 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    border: 1px solid var(--active-button-primary-color);
+    border-radius: 16px;
+    padding: 12px;
+    &.newS{
+        grid-column: 1;
+        border-color: var(--active-button-success-color);
+    }
+    > label{
+        width: 100%;
+    }
+    >div{
+        width: 100%;
+    }
+}

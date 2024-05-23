@@ -1,0 +1,281 @@
+.checkbox {
+    padding: 4px;
+    border-radius: 8px;
+    background-color: var(--active-button-primary-color);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+
+    >span {
+        color: #fff;
+        font-weight: bold;
+    }
+
+    >input {
+        accent-color: #444;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        font-size: 2rem;
+        padding: 0.1rem;
+        border-radius: 0.5rem;
+
+    }
+}
+/**************************************************************************************************************/
+.inputGroup {
+    position: relative;
+    user-select: none;
+    width: 100%;
+    padding-block: 12px;
+    display: flex;
+    --primary:var(--active-button-primary-color);
+    transition: padding .1s linear;
+
+    --separated-bg:#ddd;
+    --separated-opacity:.6;
+    --separated-border:#333;
+
+    &.error{
+        --primary:var(--active-button-error-color);
+        padding-bottom: 24px;
+        animation: shake-horizontal 0.8s linear both;
+        animation-delay: .25s;
+    }
+}
+.input {
+    width: 100%;
+    border: solid 1.5px #9e9e9e;
+    border-radius: 1rem;
+    background: none;
+    padding: 1rem;
+    font-size: 1rem;
+    color: #333;
+    transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.input.button{
+    cursor: pointer;
+    display: flex;
+    place-items: center;
+    gap: 16px;
+    fill: var(--primary);
+    > span {
+        color: inherit;
+    }
+    > svg {
+        width: 16px;
+        fill: inherit;
+    }
+    &.file{
+        color:#fff;
+        fill: #fff;
+        background-color: var(--primary);
+    }
+}
+
+.label {
+    position: absolute;
+    left: 15px;
+    color: #333;
+    pointer-events: none;
+    transform: translateY(1rem);
+    transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input:focus, .input.button, .input:valid {
+    outline: none;
+    border: 1.5px solid var(--primary);
+}
+
+.input.focus~label {
+    transform: translateY(-50%) scale(0.8);
+    background-color: var(--primary);
+    padding: 0 .4em;
+    color: #fff;
+    border-radius: 8px;
+}
+.fileInput{
+    display: none;
+}
+.errorMessage {
+    position: absolute;
+    left: 15px;
+    color: var(--primary);
+    bottom: 0;
+    transition: 150ms linear;
+}
+@keyframes shake-horizontal {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70% {
+    transform: translateX(-2.5px);
+  }
+  20%, 40%, 60% {
+    transform: translateX(2.5px);
+  }
+  80% {
+    transform: translateX(2px);
+  }
+  90% {
+    transform: translateX(-2px);
+  }
+}
+/**************************************************************************************************************/
+.activeSelect{
+    & .input {
+        z-index: 11;
+    }
+    & .optionsMenu{
+        z-index: 10;
+    }
+}
+.input:has(>.selectButton){
+
+    &, & ~ .optionsMenu {
+        background-color: #fff;
+        & span{
+            color: #222;
+        }
+    }
+    position: relative;
+    &:has(>.selectButton:checked){
+        ~ .optionsMenu{
+            animation: show-select-menu .1s linear;
+        }
+    }
+    .selectButton{
+        display: none;
+    }
+    &.dark, &.dark ~ .optionsMenu {
+        background-color: #444;
+        & span{
+            color: #fff;
+        }
+    }
+}
+.optionsMenu{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    top:70%;
+    width: 100%;
+    border: 1px solid var(--primary);
+    border-top: none;
+    padding-top: 20px;
+    animation: hidden .1s  ease-in forwards;
+    .separated {
+        border-top: 1px solid var(--separated-border);
+        padding: 4px;
+        margin-top: 8px;
+        font-weight: bold;
+        opacity: var(--separated-opacity);
+        background-color: var(--separated-bg);
+    }
+}
+.option{
+    display: grid;
+    padding: 4px;
+    cursor: pointer;
+    grid-template-columns: 1fr 3fr;
+    align-items: center;
+    gap: 8px;
+    & input {
+        display: none;
+    }
+    &:hover, &.select{
+        background-color: #eee;
+    }
+    & .optionImg{
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+    }
+}
+.options{
+    display: flex;
+    flex-direction: column;
+    max-height: 200px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.selectSearch{
+    position: relative;
+    & .input {
+        width: 100%;
+        padding: 0px;
+        padding-inline: 4px;
+        border-inline:0px !important;
+        font-size: 16px;
+        border-radius: 0px;
+        &.valid ~ svg{
+            visibility: hidden;
+        }
+    }
+    & svg {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        width: 16px;
+        fill: #4448;
+    }
+}
+@keyframes hidden{
+    from {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+    to{
+        opacity: 0;
+        transform: translateY(-30px);
+        display:none
+    }
+}
+@keyframes show-select-menu {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0px);
+    }
+}
+
+/********************************* TEXTAREA ******************************************************/
+textarea.input{
+    resize: none;
+    overflow-y: auto;
+    scrollbar-width: none;
+    &.resizable {
+        resize: vertical;
+    }
+}
+/********************************* phoneNumber ******************************************************/
+.phoneNumber{
+    display: flex;
+    & >.inputGroup:first-child{
+        flex-grow: 1;
+        flex-basis: 33%;
+        & > label {
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+    }
+    & >.inputGroup:last-child{
+        flex-grow: 2;
+        & > input {
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-left: transparent;
+        }
+    }
+}
+/***************************************************************************************************/
+.dark{
+    --separated-bg:#333;
+    --separated-opacity:1;
+    --separated-border:#fff;
+}

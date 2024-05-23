@@ -1,0 +1,105 @@
+.snackbar {
+    --move:30px
+    --color:#123;
+    --length:0%;
+    min-width: fit-content;
+    width: max-content;
+    background-color: var(--color);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 30px;
+    grid-template-rows: 1fr 8px;
+    overflow: hidden;
+    animation: fadeOut 0.5s forwards;
+}
+
+.primary{
+    --color:var(--active-button-primary-color);
+}
+.secondary{
+    --color:var(--active-button-secondary-color);
+}
+.success{
+    --color:var(--active-button-success-color);
+}
+.error{
+    --color:var(--active-button-error-color);
+}
+.warning{
+    --color:var(--active-button-warning-color);
+}
+.info{
+    --color:var(--active-button-info-color);
+}
+.snackbar.show {
+    animation: fadeIn 0.5s forwards;
+}
+
+
+.text{
+    padding: 16px;
+    > p {
+        color: #fff;
+    }
+}
+
+.closeButton{
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border: 2px solid var(--color);
+    border-top-right-radius: 8px;
+    background-color: #fafafa;
+    color: var(--color);
+    font-size: large;
+    &:hover{
+        filter: brightness(95%);
+    }
+}
+
+.progress{
+    grid-column: 1 / 3;
+    grid-row: 2 / 3;
+    background-color:#333;
+    width: 100%;
+    height: 100%;
+    > div {
+        width: var(--length);
+        height: 100%;
+        background-color: var(--color);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        transform: translate(30px, 30px);
+        bottom: 0;
+        right: 0;
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(0px, 0px);
+        bottom: 30px;
+        right: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        transform: translate(0px, 0px);
+        bottom: 30px;
+        right: 30px;
+        opacity: 1;
+    }
+
+    to {
+        transform: translate(30px, 30px);
+        bottom: 0;
+        right: 0;
+        opacity: 0;
+    }
+}

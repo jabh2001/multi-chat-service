@@ -1,0 +1,128 @@
+.title{
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px;
+    height: 70px;
+    > h3 {
+        font-size: 24px;
+        color: #444;
+        font-weight: bold;
+    }
+}
+div:has(> .main){
+    height: 100%;
+}
+.main{
+    padding: 0 16px;
+    gap: 16px;
+    color: red;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    height: calc(100% - 70px);
+
+}
+.description{
+    background-color: #eee;
+    font-size: 12px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    
+}
+.list{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: max-content;
+    gap: 32px;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    user-select: none;
+    padding-bottom: 25px;
+}
+.inboxesListItem{
+    padding-bottom: 20px;
+    border: 1px solid #444;
+    & svg {
+        width: 16px;
+    }
+}
+.cardTitle{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 16px;
+}
+.name{
+    grid-column: 1 / 2;
+    font-weight: bold;
+    color: #333;
+    font-size: 16px;
+}
+.provider{
+    grid-column: 1 / 2;
+    color: #444;
+    font-size: 12px;
+}
+.status{
+    height: 100%;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    padding-left: 2px;
+    gap: 16px;
+    > div {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        width: 10px;
+        background-color: red;
+    }
+    > .on{
+        background-color: rgb(115, 227, 105);
+    }
+    > .off{
+        background-color: rgb(227, 105, 105);
+    }
+}
+.actions{
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    align-self: center;
+    display: inline-flex;
+    gap: 16px;
+    > button {
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        &:hover{
+            filter: brightness(125%);
+        }
+    }
+}
+.editButton{
+    fill: rgb(205, 193, 87);
+
+}
+.deleteButton{
+    fill: rgb(212, 67, 67);
+
+}
+.qrContainer{
+    width: 100%;
+    grid-column: 1 / 3;
+    position: relative;
+}
+.shade{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(138, 219, 137, 0.637);
+}
+.qr{
+    width: 100%;
+    aspect-ratio: 1;
+    object-position: center;
+    object-fit: cover;
+}

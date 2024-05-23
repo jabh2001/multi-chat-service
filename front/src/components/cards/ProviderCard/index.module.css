@@ -1,0 +1,26 @@
+.card{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    transition: all .25s;
+    user-select: none;
+    &:hover{
+        box-shadow: 5px 5px 5px  #4444, -3px -3px 5px  #4442;
+    }
+}
+.title{
+    text-align: center;
+    font-weight: bold;
+}
+.img{
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
+    border-radius: 8px;
+}

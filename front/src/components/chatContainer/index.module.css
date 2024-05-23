@@ -1,0 +1,15 @@
+.layout{
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto min-content;
+    width: 100%;
+    background-color: #25292c;
+    overflow-y: auto;
+    scrollbar-width: none;
+    background-image: url('../../assets/chat-background.png');
+    background-size:cover;
+    scroll-behavior: smooth;
+  }
+.tabsContent{
+  height: 100%;
+}

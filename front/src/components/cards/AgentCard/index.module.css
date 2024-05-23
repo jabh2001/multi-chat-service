@@ -1,0 +1,38 @@
+.agent {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    column-gap: 8px;
+    margin-bottom: 10px;
+    display: grid;
+    grid-template-columns:200px 1fr;
+    grid-template-areas: "name type" "email type";
+    &.admin {
+        background-color: #f0f0f0; /* Color para los administradores */
+        order: -1;
+        & .type{
+            color: var(--active-button-primary-color);
+        }
+    }
+}
+
+
+.name {
+    grid-area: name;
+    font-weight: bold;
+}
+
+.email {
+    grid-area: email;
+    color: #666;
+}
+
+.type {
+    grid-area: type;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    justify-self: center;
+    align-self: center;
+    text-transform: capitalize;
+}

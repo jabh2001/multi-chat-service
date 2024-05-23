@@ -1,0 +1,15 @@
+.form{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    padding-top: 16px;
+    > div {
+        padding-top: 8px;
+        display: flex;
+        justify-content: center;
+        > * {
+            width: 100%;
+        }
+    }
+}

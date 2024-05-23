@@ -1,0 +1,14 @@
+.divPrincipal {
+  background-color: #202020;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: 1fr 1fr;
+  padding: 20px;
+
+}
+
+.divPrincipal p{
+  color: white;
+
+}

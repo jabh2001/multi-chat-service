@@ -1,0 +1,25 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: max-content;
+    & svg {
+        width: 100%;
+    }
+}
+.sm{
+    width: 16px;
+}
+.md{
+    width: 32px;
+}
+.lg{
+    width: 48px;
+}
+.xl{
+    width: 64px;
+}
+.full{
+    width: 100%;
+}

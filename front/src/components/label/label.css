@@ -1,0 +1,23 @@
+.label{
+    display: flex;
+    width: 6rem;
+    height: 1rem;
+    border-radius: 3px;
+    margin: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(112, 111, 111, 0.644);
+}
+.label button{
+    color: white;
+    background-color: transparent;
+    font-size: 0.7rem;
+    border: none;
+}
+
+.newlabel{
+    border: 0.2px solid white;
+    background-color: #0c3468;
+    color: #789fd1;
+}

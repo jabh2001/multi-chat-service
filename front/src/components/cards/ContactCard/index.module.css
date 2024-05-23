@@ -1,0 +1,47 @@
+.container{
+    width: 100%;
+    border-right: 1px solid #4444;
+    display: flex;
+    flex-direction: column;
+    /* align-items: start; */
+    padding-top: 16px;
+    & .avatarContainer{
+        width: 60%;
+        align-self: center;
+    }
+    & > .contactData > *{
+        color: #fff;
+        padding-inline:12px;
+        width: 100%;
+    }
+    & .contactName{
+        font-size: 32px;
+        color: #fff;
+    }
+}
+.nameInfo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.socialMedia{
+    padding: 8px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    background-color: #eef;
+    border: 1px solid #444, none;
+    width: 100%;
+    & p{
+        color: #444;
+    }
+    & a {
+        &, &:visited, &:active, &:focus{
+            cursor: pointer;
+            color: var(--active-button-primary-color);
+            font-weight: bold;
+        }
+    }
+}

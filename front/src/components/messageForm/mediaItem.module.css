@@ -1,0 +1,36 @@
+.mediaItemContainer{
+    background-color: #333;
+    border-radius: 8px;
+    aspect-ratio: 1;
+    width: 80px;
+    min-width: 80px;
+    padding: 12px;
+    fill: #fff;
+    position: relative;
+    overflow: hidden;
+    > svg {
+        position: relative;
+    }
+    &:has(>img){
+        fill: #fff4;
+    }
+    > img {
+        top: 20%;
+        left: 20%;
+        position: absolute;
+        width: 60%;
+        height: 60%;
+        object-fit: cover;
+    }
+}
+.mediaItemCloseButton{
+    position: absolute;
+    top: -8px;
+    right: 2px;
+    color: #fff;
+    user-select: none;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    backdrop-filter: contrast(100%);
+}

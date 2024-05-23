@@ -1,0 +1,22 @@
+.form{
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap:  32px;
+}
+.title{
+    font-size: 24px;
+    color: #444;
+}
+.labels, .teams{
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.button{
+ > * {
+    width: 100%;
+    text-transform: capitalize;
+    font-size: 16px;
+ }
+}

@@ -1,0 +1,21 @@
+.form{
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap:  32px;
+}
+.title{
+    font-size: 24px;
+    color: #444;
+}
+.labels{
+    display: flex;
+    gap: 16px;
+}
+.button{
+ > * {
+    width: 100%;
+    text-transform: capitalize;
+    font-size: 16px;
+ }
+}

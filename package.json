@@ -1,0 +1,23 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "workspaces":[
+    "front",
+    "api"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "typescript": "5.4.3",
+    "@types/node": "20.11.20"
+  }
+}

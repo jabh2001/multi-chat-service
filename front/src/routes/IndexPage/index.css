@@ -1,0 +1,11 @@
+.img-cont{
+    width: 500px;
+    height: 500px;
+    padding: 16px;
+}
+.img{
+    height: 100%;
+}
+.span{
+    margin-block: 10rem;
+}

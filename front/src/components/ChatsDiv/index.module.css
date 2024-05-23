@@ -1,0 +1,11 @@
+.chatsContainer{
+    height: 100%;
+}
+.conversationsContainer{
+    height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+.conversationsSectionContainer{
+    height: 100%;
+}

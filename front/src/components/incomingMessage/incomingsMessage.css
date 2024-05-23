@@ -1,0 +1,21 @@
+.incomingContainer{
+    
+    display: flex;
+    justify-content: left;
+    
+    
+}
+.incomingMessage{
+    display: flex;
+    justify-content: right;
+    padding: 5px;
+    padding-right: 10px;
+    margin: 6px;
+    border-radius: 7px 7px 7px 0px;
+    height: auto;
+    background-color: #697076;
+    width: 60%;
+}
+.incomingMessage p{
+    color: white;
+}

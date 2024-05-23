@@ -1,0 +1,53 @@
+.button {
+    position: relative;
+    aspect-ratio: 1;
+    width: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    padding: 10px;
+    background-color: #444;
+    fill:  #fff;
+    transition: fill .1s ease-in-out, transform .25s linear;
+    overflow: hidden;
+    &:hover{
+        fill: var(--active-button-primary-color);
+    }
+    &.rotate:hover{
+        transform: rotate(90deg);
+    }
+    &.recording .recordBg{
+        transform: translateY(0);
+    }
+    & svg {
+        position: relative;
+        z-index: 1;
+    }
+    &.recording {
+        fill: #fff;
+    }
+}
+.recordBg{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: red;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(-100%);
+    transition: transform .25s linear;
+}
+.buttonContainer{
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    gap: 8px;
+}
+.camContainer{
+    width: 100%;
+}
