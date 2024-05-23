@@ -13,9 +13,9 @@ dist-ssr
 *.local
 
 # Editor directories and files
-QRs/*
-sessions/*
-files/contacts/*
+api/QRs/*
+api/sessions/*
+api/files/contacts/*
 .vscode/*
 !.vscode/extensions.json
 .idea
