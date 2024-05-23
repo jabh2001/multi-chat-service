@@ -7,9 +7,7 @@
     "build":"npx tsc",
     "serve":"node dist/src/index.js",
     "test": "jest --verbose --NODE_ENV=test",
-    "test:watch":"npm run test -- --watch",
-    "dev": "nodemon --ignore ./QRs/ --ignore ./sessions/ ./src/index.ts",
-    "env": "ts-node ./src/libs/dataBase.ts"
+    "dev": "nodemon --ignore ./QRs/ --ignore ./sessions/ ./src/index.ts"
   },
   "keywords": [],
   "author": "",

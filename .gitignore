@@ -15,6 +15,7 @@ dist-ssr
 # Editor directories and files
 api/QRs/*
 api/sessions/*
+api/sessions/
 api/files/contacts/*
 .vscode/*
 !.vscode/extensions.json
@@ -27,7 +28,6 @@ api/files/contacts/*
 *.sw?
 .env
 
-./sessions/
 
 .code-workspace
 coverage
