@@ -13,20 +13,17 @@ dist-ssr
 *.local
 
 # Editor directories and files
-api/QRs/*
-api/sessions/*
+api/QRs
 api/sessions/
 api/files/contacts
-api/files/contacts/*
 api/dist
-api/dist/*
 .vscode/*
 !.vscode/extensions.json
 .idea
 .DS_Store
 *.suo
 *.ntvs*
-*.njsproj
+*.njs proj
 *.sln
 *.sw?
 .env

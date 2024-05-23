@@ -2,18 +2,21 @@
   "name": "app",
   "version": "1.0.0",
   "main": "index.js",
-  "workspaces":[
+  "workspaces": [
     "front",
     "api"
   ],
   "scripts": {
-    "dev:front":"npm run dev --workspace=front",
+    "dev:front": "npm run dev --workspace=front",
     "build:front": "npm run build --workspace=front",
     "lint": "npm run lint --workspace=front",
-    "dev:api":"npm run dev --workspace=api",
-    "build:api":"npm run build --workspace=api",
+    "dev:api": "npm run dev --workspace=api",
+    "build:api": "npm run build --workspace=api",
     "test:api": "npm run test --workspace=api",
-    "serve":"npm run serve --workspace=api"
+    "serve": "npm run serve --workspace=api",
+    "commit":"sui-mono commit",
+    "check":"sui-mono check",
+    "release":"sui-mono release"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +26,8 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
-    "typescript": "5.4.3",
-    "@types/node": "20.11.20"
+    "@s-ui/mono": "^2.45.0",
+    "@types/node": "20.11.20",
+    "typescript": "5.4.3"
   }
 }
