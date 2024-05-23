@@ -16,6 +16,7 @@ dist-ssr
 api/QRs/*
 api/sessions/*
 api/sessions/
+api/files/contacts
 api/files/contacts/*
 api/dist
 api/dist/*
