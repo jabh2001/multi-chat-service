@@ -39,7 +39,6 @@ inboxRouter.route("/")
     })
     .post(async (req, res) => {
         try {
-            console.log(req.body)
             res.json({ inbox: await saveNewInbox(req.body) })
         } catch (e: any) {
             return errorResponse(res, e)
