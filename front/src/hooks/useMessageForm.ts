@@ -20,9 +20,9 @@ const useMessageForm =  () => {
         e.preventDefault();
         const  listBufferBase64 = await Promise.all(
             files.map(async (file, i) => ({ 
-                tipo:file.type,
+                messageType:file.type,
                 base64:await convertFileToBase64(file),
-                caption:i == 0 ? message : undefined
+                text:i == 0 ? message : undefined
             })
         ))
         const datosEnviar = {
@@ -33,7 +33,7 @@ const useMessageForm =  () => {
             messageType: 'outgoing',
             message,
             inbox: inbox?.name,
-            listBufferBase64
+            listBufferBase64:listBufferBase64.length === 0 ? undefined : listBufferBase64
         }
 
         if (ws && ws.readyState === WebSocket.OPEN) {
