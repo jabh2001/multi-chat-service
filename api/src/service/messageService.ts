@@ -1,8 +1,8 @@
 import { getClientList } from "../app";
 import { ConversationModel, InboxModel, MessageModel, UserModel } from "../libs/models";
-import { messageSchema } from "../libs/schemas";
-import SocketPool from "../libs/socketConnectionPool";
-import { ContactType, ConversationType, InboxType, MessageType } from "../types";
+import { MessageType, messageSchema } from "../libs/schemas";
+import SocketPool from "../libs/message-socket/socketConnectionPool";
+import { ContactType, ConversationType, InboxType } from "../types";
 import { saveNewConversation } from "./conversationService";
 const sseClients = getClientList()
 
@@ -20,7 +20,7 @@ export async function saveNewMessageInConversation(conversationId:any, message:a
     
     const newData = messageSchema.omit({ id:true, conversationId:true }).parse(message)
     const newMessage =  await MessageModel.insert.value({ ...newData, conversationId }).fetchOneQuery<MessageType>()
-    sseClients.emitToClients("update-conversation-last-message", {conversationId, lastMessage:newMessage.content, lastMessageDate:String(newMessage.createdAt)})
+    sseClients.emitToClients("update-conversation-last-message", {conversationId, lastMessage:newMessage.content || "", lastMessageDate:String(newMessage.createdAt)})
     return newMessage
 }
 
@@ -34,7 +34,7 @@ export async function sendMessageToContact(contact:ContactType, { inboxName, mes
     if(!inbox){
         throw new Error("No inbox found")
     }
-    const conn = SocketPool.getInstance().getOrCreateBaileysConnection(inbox.name)
+    const conn = SocketPool.getInstance().socketCreator.getOrCreateBaileysSocket(inbox.name)
 
     const conversations = await (
         ConversationModel.query
@@ -52,7 +52,6 @@ export async function sendMessageToContact(contact:ContactType, { inboxName, mes
     }
     const phone = contact.phoneNumber
     const sendMsg = await conn.sendMessage(contact.phoneNumber.slice(1), msg)
-    msg.whatsappId = sendMsg.key.id
-    const result = await saveNewMessageInConversation(conversation.id, msg)
+    const result = await saveNewMessageInConversation(conversation.id, sendMsg)
     return result
 }

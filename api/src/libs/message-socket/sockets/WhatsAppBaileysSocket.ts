@@ -1,78 +1,24 @@
-import makeWASocket, { AnyMediaMessageContent, DisconnectReason, MessageUpsertType, downloadMediaMessage, proto, useMultiFileAuthState } from "@whiskeysockets/baileys"
+import makeWASocket, { DisconnectReason, MessageUpsertType, downloadMediaMessage, proto, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import { Boom } from "@hapi/boom"
 import pino from "pino"
-import qrcode from "qrcode"
 import fs from "fs"
-import { ContactType, ConversationType, InboxType, Base64Buffer } from "../types"
-import { MessageType } from "./schemas"
-import { ContactModel, ConversationModel, InboxModel } from "./models"
+import { ContactType, ConversationType, InboxType, Base64Buffer } from "../../../types"
+import { ContactModel, ConversationModel, InboxModel } from "../../models"
 import path from "path"
-import { getClientList, getWss } from "../app"
-import WS from "./websocket"
-import { getMessageByWhatsAppId } from "../service/messageService"
-import { Join } from "./orm/query"
-import { getOrCreateContactByPhoneNumber } from "../service/contactService"
-import { getOrCreateConversation } from "../service/conversationService"
-import { getInboxByName } from "../service/inboxService"
-import { initDBClient } from "./dataBase"
-
+import { getClientList, getWss } from "../../../app"
+import WS from "../../message-socket/websocket-adapter"
+import { getMessageByWhatsAppId } from "../../../service/messageService"
+import { Join } from "../../orm/query"
+import { getOrCreateContactByPhoneNumber } from "../../../service/contactService"
+import { getOrCreateConversation } from "../../../service/conversationService"
+import { getInboxByName } from "../../../service/inboxService"
+import { Socket } from "./socket"
+import { MediaMessageType } from "../../../types"
+import { MessageType } from "../../schemas"
 
 const sseClients = getClientList()
-const QR_FOLDER = "./QRs" as const
 const SESSION_FOLDER = "./sessions" as const
-const MEDIA_MESSAGE =  {
-    audioMessage:'audioMessage',
-    imageMessage:'imageMessage',
-    videoMessage:'videoMessage',
-    documentMessage:'documentMessage'
-}
-const MEDIA_MESSAGE_SET = new Set(Object.values(MEDIA_MESSAGE))
 
-export abstract class Socket {
-    folder: string
-
-    get qr_folder() {
-        return path.join(QR_FOLDER, this.qr)
-    }
-    get qr() {
-        return `qr-${this.folder}.png`
-    }
-    getQRBase64() {
-        const base64 = fs.readFileSync(this.qr_folder, { encoding: 'base64' });
-        return base64
-    }
-    verifyQRFolder() {
-        try {
-            if (!fs.existsSync(QR_FOLDER)) {
-                fs.mkdirSync(QR_FOLDER);
-            }
-            if (!fs.existsSync(this.qr)) {
-                fs.writeFileSync(this.qr_folder, 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
-            }
-            return true;
-        } catch (e) {
-            return false
-        }
-    }
-
-    async saveQRCode(qrData: string) {
-        try {
-            const qrCodeDataUrl = await qrcode.toDataURL(qrData, { errorCorrectionLevel: 'H' });
-            const base64Data = qrCodeDataUrl.replace(/^data:image\/png;base64,/, '');
-            if (!fs.existsSync(QR_FOLDER)) {
-                fs.mkdirSync(QR_FOLDER);
-            }
-            fs.writeFileSync(this.qr_folder, base64Data, 'base64');
-        } catch (error) {
-            console.error('Error al guardar el código QR:', error);
-        }
-    }
-
-    constructor(folder: string) {
-        this.folder = folder
-    }
-    abstract sendMessage(phone: string, message: MessageType): void
-}
 export class WhatsAppBaileysSocket extends Socket {
     sock: any
     store:any
@@ -107,9 +53,6 @@ export class WhatsAppBaileysSocket extends Socket {
         this.sock = sock
         this.saveCreds = saveCreds
 
-    }
-    sentCreds() {
-        sseClients.emitToClients("qr-update", { name: this.folder, user: this.sock?.user ?? false, qr: this.getQRBase64() })
     }
 
     async verifyStatus(logout = false) {
@@ -173,15 +116,15 @@ export class WhatsAppBaileysSocket extends Socket {
                 tipo: "text"
             }
             if(imageMessage) {
-                base64Buffer.tipo = MEDIA_MESSAGE.imageMessage
+                base64Buffer.tipo = Socket.MEDIA_MESSAGE.imageMessage
                 base64Buffer.caption = imageMessage.caption
             } else if (audioMessage) {
-                base64Buffer.tipo = MEDIA_MESSAGE.audioMessage
+                base64Buffer.tipo = Socket.MEDIA_MESSAGE.audioMessage
                 base64Buffer.caption = audioMessage.seconds?.toString()
             } else if  (videoMessage) {
-                base64Buffer.tipo = MEDIA_MESSAGE.videoMessage
+                base64Buffer.tipo = Socket.MEDIA_MESSAGE.videoMessage
             }else if  (documentMessage) {
-                base64Buffer.tipo = MEDIA_MESSAGE.documentMessage
+                base64Buffer.tipo = Socket.MEDIA_MESSAGE.documentMessage
             }
 
             return  base64Buffer
@@ -246,79 +189,24 @@ export class WhatsAppBaileysSocket extends Socket {
             await this.sendMessageorContact({ m })
         }
     }
-    async sendMediaMessage(phone: string, message: AnyMediaMessageContent) {
-        return await this.sock.sendMessage(`${phone}@s.whatsapp.net`, message);
+
+    sentCreds(): void {
+        sseClients.emitToClients("qr-update", { name: this.folder, user: this.sock?.user ?? false, qr: this.getQRBase64() })
     }
-    async sendMessage(phone: string, message: Omit<MessageType, "id">) {
+    async sendMessage(phone: string, message: Omit<MessageType, "id">): Promise<Omit<MessageType, "id">> {
         const mensaje = {
             text: message.content
         };
-        return await this.sock.sendMessage(`${phone}@s.whatsapp.net`, mensaje);
+        console.log({mensaje, number:1})
+        const wMessage =  await this.sock.sendMessage(`${phone}@s.whatsapp.net`, mensaje);
+        console.log({mensaje, number:2})
+        message.whatsappId = wMessage.key.id
+        return message
     }
-
+    async sendMediaMessage(phone: string, message: MessageType, media: MediaMessageType): Promise<Omit<MessageType, "id">> {
+        const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, media);
+        message.whatsappId = wMessage.key.id
+        return message
+    }
 
 }
-class SocketPool {
-    private static instance: SocketPool
-    private pool: Map<string, any> = new Map()
-
-    private constructor() {
-        this.pool = new Map()
-        this.init()
-    }
-
-    async init() {
-        await initDBClient()
-        const unWatchPool = new Set<WhatsAppBaileysSocket>()
-        const inboxes = await InboxModel.query.fetchAllQuery<InboxType>()
-        for (const inbox of inboxes) {
-            const conn = this.createBaileysConnection(inbox.name)
-            const status = conn.verifyQRFolder()
-            if (status) {
-                const watch = fs.watch(conn.qr_folder)
-                watch.on("change", () => {
-                    conn.sentCreds()
-                })
-            } else {
-                unWatchPool.add(conn)
-            }
-        }
-    }
-
-    static getInstance() {
-        if (!SocketPool.instance) {
-            SocketPool.instance = new SocketPool();
-        }
-        return SocketPool.instance;
-    }
-
-    getConnection(folder: string) {
-        return this.pool.get(folder)
-    }
-    getBaileysConnection(folder: string) {
-        return this.pool.get(folder) as WhatsAppBaileysSocket | undefined
-    }
-    deleteConnection(conn:string | Socket){
-        if(conn instanceof Socket){
-            this.pool.delete(conn.folder)
-        } else {
-            this.pool.delete(conn)
-        }
-    }
-
-    createBaileysConnection(folder: string) {
-        let socket = new WhatsAppBaileysSocket(folder);
-        this.pool.set(folder, socket);
-        return socket
-    }
-    getOrCreateBaileysConnection(folder: string): WhatsAppBaileysSocket {
-        const connection = this.getBaileysConnection(folder)
-        if (connection) {
-            return connection
-        } else {
-            return this.createBaileysConnection(folder)
-        }
-    }
-}
-
-export default SocketPool

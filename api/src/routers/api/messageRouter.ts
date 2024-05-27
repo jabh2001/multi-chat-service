@@ -1,9 +1,9 @@
 import { applyTo, getClientList } from "../../app";
 import { Router } from "express";
-import SocketPool from "../../libs/socketConnectionPool";
-import WS from "../../libs/websocket";
+import SocketPool from "../../libs/message-socket/socketConnectionPool";
 import { getAsignedUserByIdSchema, updateInboxConversation } from "../../service/conversationService";
 import { getInboxByName } from "../../service/inboxService";
+import WS from "../../libs/message-socket/websocket-adapter";
 
 const clients = getClientList()
 const messageWsRouter = Router()
@@ -25,11 +25,11 @@ messageWsRouter.ws('/conversation/:id', async (ws, rq) => {
                 clients.emitToClients("update-conversation", conversation)
 
             }
-            const baileys = poll.getBaileysConnection(jsonData.inbox)
-            if(!baileys){
+            const socket = poll.getConnection(jsonData.inbox)
+            if(!socket){
                 return 
             }
-            const result = await WS.outgoingMessage(jsonData, baileys)
+            const result = await WS.outgoingMessage(jsonData, socket)
             if(Array.isArray(result)){
                 for(const res of result){
                     ws.send(JSON.stringify(res))

@@ -3,7 +3,7 @@ import express from "express"
 import cors from "cors"
 import apiRouter from "./routers/api"
 import cookieParser from "cookie-parser"
-import SocketPool from './libs/socketConnectionPool';
+import SocketPool from './libs/message-socket/socketConnectionPool';
 import { app } from './app';
 import listenRouter from './routers/listenRouter';
 import messageWsRouter from './routers/api/messageRouter';

@@ -1,12 +1,12 @@
 import { InboxModel } from "../libs/models";
 import { inboxSchema } from "../libs/schemas";
-import SocketPool from "../libs/socketConnectionPool";
+import SocketPool from "../libs/message-socket/socketConnectionPool";
 import { InboxType } from "../types";
 
 export async function getInboxes(){
     const inboxes = await InboxModel.query.fetchAllQuery() as InboxType[]
     return inboxes.map(inbox => {
-        const conn = SocketPool.getInstance().getOrCreateBaileysConnection(inbox.name)
+        const conn = SocketPool.getInstance().socketCreator.getOrCreateBaileysSocket(inbox.name)
         const user = conn.sock.user
         const qr = conn.getQRBase64()
         return { ...inbox, user, qr }
@@ -17,7 +17,7 @@ export async function saveNewInbox(inbox:Omit<InboxType, "id">){
     const newData = inboxSchema.omit({ id:true }).parse(inbox)
     const newInbox = await InboxModel.insert.value(newData).fetchOneQuery() as InboxType
     const pool = SocketPool.getInstance()
-    pool.createBaileysConnection(newInbox.name) //
+    pool.socketCreator.createBaileysSocket(newInbox.name) //
     return newInbox
 }
 
@@ -35,7 +35,7 @@ export async function updateInbox(inbox:InboxType, newData:Partial<InboxType>){
 export async function deleteInbox(inboxId:InboxType["id"]){
     const inbox = await InboxModel.query.filter(InboxModel.c.id.equalTo(inboxId)).fetchOneQuery() as InboxType
     const socketPool = SocketPool.getInstance()
-    const conn = socketPool.getOrCreateBaileysConnection(inbox.name)
+    const conn = socketPool.socketCreator.getOrCreateBaileysSocket(inbox.name)
     conn.logout()
     socketPool.deleteConnection(conn)
     return InboxModel.delete.filter(InboxModel.c.id.equalTo(inboxId)).fetchAllQuery()

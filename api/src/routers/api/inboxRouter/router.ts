@@ -3,7 +3,7 @@ import { deleteInbox, getInboxById, getInboxes, saveNewInbox, updateInbox } from
 import { getInboxConversationAndContactById, getInboxConversations, saveNewConversation, updateInboxConversation } from "../../../service/conversationService";
 import { getMessageByConversation } from "../../../service/messageService";
 import { errorResponse } from "../../../service/errorService";
-import SocketPool from "../../../libs/socketConnectionPool";
+import SocketPool from "../../../libs/message-socket/socketConnectionPool";
 import {  ConversationModel } from "../../../libs/models";
 import { deleteConversationNote, getConversationNoteById, getConversationNotes, saveNewConversationNote, updateConversationNote } from "../../../service/notesService";
 
@@ -73,7 +73,7 @@ inboxRouter.route("/:id").all(getInboxMiddleware)
 inboxRouter.route('/:id/log-out').all(getInboxMiddleware)
     .post(async (req, res)=>{
         const inbox = req.inbox
-        const conn = SocketPool.getInstance().getBaileysConnection(inbox.name)
+        const conn = SocketPool.getInstance().socketCreator.getOrCreateBaileysSocket(inbox.name)
         try {
             if(conn){
                 await conn.logout()
@@ -134,7 +134,7 @@ inboxRouter.route("/:id/conversation/:conversationId/message").all(getInboxMiddl
     })
 inboxRouter.put("/:id/conversation/:conversationId/send-message", getInboxMiddleware, getConversationMiddleware, async (req, res) => {
     try {
-        const connection = SocketPool.getInstance().getBaileysConnection(req.inbox.name)
+        const connection = SocketPool.getInstance().socketCreator.getOrCreateBaileysSocket(req.inbox.name)
         connection?.sendMessage(req.inbox.conversation.contact.phoneNumber, { content: req.body.message } as any)
     } catch (e: any) {
         return errorResponse(res, e)

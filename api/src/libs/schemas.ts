@@ -50,9 +50,9 @@ export const conversationSchema = z.object({
 })
 
 const bufferItemSchema = z.object({
-    tipo: z.string(),
+    messageType: z.string(),
     base64: z.string(),
-    caption: z.string()
+    text: z.string()
 });
 export const messageSchema = z.object({
     id: z.number().positive(),
@@ -74,10 +74,10 @@ export const fastMediaMessageSchema = z.object(
     {
         id:z.number().positive(),
         fastMessageId: z.number().positive(),
-        text:z.string().default(""),
+        order:z.number(),
         messageType:z.string(),
         base64: z.string().optional(),
-        order:z.number(),
+        text:z.string().default(""),
     }
 )
 export const fastMessageSchema = z.object(
