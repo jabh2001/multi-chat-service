@@ -14,7 +14,7 @@ dist-ssr
 
 # Editor directories and files
 api/QRs
-api/sessions/
+api/socket_provider_session_files/
 api/files/contacts
 api/dist
 .vscode/*
