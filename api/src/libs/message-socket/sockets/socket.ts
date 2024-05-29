@@ -3,7 +3,7 @@ import fs from "fs"
 import path from "path"
 import { MediaMessageType } from "../../../types"
 import { MessageType } from "../../schemas"
-const QR_FOLDER = "./QRs" as const
+const QR_FOLDER = "./socket_provider_session_files/QRs" as const
 
 export abstract class Socket {
     static MEDIA_MESSAGE =  {
@@ -59,4 +59,29 @@ export abstract class Socket {
 
     abstract sendMessage(id: string, message: Omit<MessageType, "id">): Promise<Omit<MessageType, "id">>
     abstract sendMediaMessage( id: string, message: Omit<MessageType, "id">, media: MediaMessageType): Promise<Omit<MessageType, "id">>
+}
+
+
+export class TelegramSocket extends Socket{
+    sentCreds(): void {
+        // Implementa la lógica para enviar credenciales aquí
+        console.log('Sending credentials...');
+    }
+    sendCreds(): void {
+        // Implementación del método sendCreds
+        console.log(`Sending credentials:`);
+    }
+    async sendMessage(id: string, message: Omit<MessageType, "id">): Promise<Omit<MessageType, "id">> {
+        // Implementa la lógica para enviar un mensaje aquí
+        console.log(`Sending message to ${id}:`, message);
+        return message;
+    }
+
+    async sendMediaMessage(id: string, message: Omit<MessageType, "id">, media: MediaMessageType): Promise<Omit<MessageType, "id">> {
+        // Implementa la lógica para enviar un mensaje con medios aquí
+        console.log(`Sending media message to ${id}:`, message, media);
+        return message;
+    }
+
+
 }

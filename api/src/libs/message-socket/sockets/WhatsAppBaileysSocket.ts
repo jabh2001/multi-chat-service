@@ -17,7 +17,7 @@ import { MediaMessageType } from "../../../types"
 import { MessageType } from "../../schemas"
 
 const sseClients = getClientList()
-const SESSION_FOLDER = "./sessions" as const
+const SESSION_FOLDER = "./socket_provider_session_files/sessions" as const
 
 export class WhatsAppBaileysSocket extends Socket {
     sock: any
@@ -31,7 +31,7 @@ export class WhatsAppBaileysSocket extends Socket {
     }
     async start() {
 
-        const { state, saveCreds } = await useMultiFileAuthState(`sessions/${this.folder}`)
+        const { state, saveCreds } = await useMultiFileAuthState(`socket_provider_session_files/sessions/${this.folder}`)
         const sock = makeWASocket({ auth: state, logger: pino({ level: "silent" }) })
 
         sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {

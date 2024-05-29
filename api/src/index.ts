@@ -10,6 +10,13 @@ import messageWsRouter from './routers/api/messageRouter';
 import { isAuthenticatedMiddleware } from './service/authService';
 import imageRouter from './routers/imageRouter';
 import path from 'path';
+import { existsSync, mkdirSync } from 'fs';
+if (!existsSync("./socket_provider_session_files")) {
+    mkdirSync("./socket_provider_session_files", { recursive: true });
+    console.log(`La carpeta ${"./socket_provider_session_files"} ha sido creada.`);
+} else {
+    console.log(`La carpeta ${"./socket_provider_session_files"} ya existe.`);
+}
 
 SocketPool.getInstance()
 
