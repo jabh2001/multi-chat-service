@@ -24,6 +24,9 @@ function ChatContainer() {
             };
         }
     }, [conversation]);
+    useEffect(() => {
+        console.log(conversation)
+    }, [conversation])
 
     return (
         <WebSocketContext.Provider value={ws}>

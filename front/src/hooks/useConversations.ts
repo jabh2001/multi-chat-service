@@ -21,7 +21,7 @@ export const useConversation = ()=>{
   const conversation = useConversationStore(state => state.conversation)
   const setContact = useConversationStore(state => state.setContact)
   const contact = useConversationStore(state => state.contact)
-  const { messages, setMessages, pushMessages, insertMessages:insert} = useChat({ key:["chat", conversation?.id ?? 0, contact?.id ?? 0]})
+  const { messages, setMessages, pushMessages, insertMessages:insert} = useChat([conversation])
 
   const [ isLoading, setIsLoading ] = useState(false)
   const [ isComplete, setIsComplete ] = useState(false)
