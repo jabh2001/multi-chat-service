@@ -15,9 +15,9 @@ import { getInboxByName } from "../../../service/inboxService"
 import { Socket } from "./socket"
 import { MediaMessageType } from "../../../types"
 import { MessageType } from "../../schemas"
+import { BAILEYS_SESSION_FOLDER } from "../../../constants"
 
 const sseClients = getClientList()
-const SESSION_FOLDER = "./socket_provider_session_files/sessions" as const
 
 export class WhatsAppBaileysSocket extends Socket {
     sock: any
@@ -74,7 +74,7 @@ export class WhatsAppBaileysSocket extends Socket {
     }
     async logout() {
         await this.sock.logout()
-        const carpetaSesion = path.join(SESSION_FOLDER, this.folder);
+        const carpetaSesion = path.join(BAILEYS_SESSION_FOLDER, this.folder);
 
         // Verificar si la carpeta existe
         if (fs.existsSync(carpetaSesion)) {

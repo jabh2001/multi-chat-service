@@ -3,7 +3,7 @@ import fs from "fs"
 import path from "path"
 import { MediaMessageType } from "../../../types"
 import { MessageType } from "../../schemas"
-const QR_FOLDER = "./socket_provider_session_files/QRs" as const
+import { QR_FOLDER } from "../../../constants"
 
 export abstract class Socket {
     static MEDIA_MESSAGE =  {
