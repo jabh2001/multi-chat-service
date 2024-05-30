@@ -16,7 +16,9 @@
     "serve": "npm run serve --workspace=api",
     "commit":"sui-mono commit",
     "check":"sui-mono check",
-    "release":"sui-mono release"
+    "release":"sui-mono release",
+    "add:api":"git add api/*",
+    "add:front":"git add front/*"
   },
   "keywords": [],
   "author": "",
