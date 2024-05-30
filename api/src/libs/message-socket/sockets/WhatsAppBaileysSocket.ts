@@ -2,7 +2,7 @@ import makeWASocket, { DisconnectReason, MessageUpsertType, downloadMediaMessage
 import { Boom } from "@hapi/boom"
 import pino from "pino"
 import fs from "fs"
-import { ContactType, ConversationType, InboxType, Base64Buffer } from "../../../types"
+import { ContactType, ConversationType, Base64Buffer } from "../../../types"
 import { ContactModel, ConversationModel, InboxModel } from "../../models"
 import path from "path"
 import { getClientList, getWss } from "../../../app"
@@ -14,8 +14,8 @@ import { getOrCreateConversation } from "../../../service/conversationService"
 import { getInboxByName } from "../../../service/inboxService"
 import { Socket } from "./socket"
 import { MediaMessageType } from "../../../types"
-import { MessageType } from "../../schemas"
 import { BAILEYS_SESSION_FOLDER } from "../../../constants"
+import { InboxType, MessageType } from "../../schemas"
 
 const sseClients = getClientList()
 
@@ -197,9 +197,7 @@ export class WhatsAppBaileysSocket extends Socket {
         const mensaje = {
             text: message.content
         };
-        console.log({mensaje, number:1})
         const wMessage =  await this.sock.sendMessage(`${phone}@s.whatsapp.net`, mensaje);
-        console.log({mensaje, number:2})
         message.whatsappId = wMessage.key.id
         return message
     }
@@ -208,5 +206,13 @@ export class WhatsAppBaileysSocket extends Socket {
         message.whatsappId = wMessage.key.id
         return message
     }
-
+    get isQRBased(){
+        return true
+    }
+    async user(){
+        return this.sock.user
+    }
+    async getContactId(contact: ContactType) {
+        return contact.phoneNumber.split('+')[1]
+    }
 }

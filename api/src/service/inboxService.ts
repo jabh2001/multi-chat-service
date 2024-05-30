@@ -1,23 +1,20 @@
 import { InboxModel } from "../libs/models";
-import { inboxSchema } from "../libs/schemas";
+import { InboxType, inboxSchema } from "../libs/schemas";
 import SocketPool from "../libs/message-socket/socketConnectionPool";
-import { InboxType } from "../types";
 
 export async function getInboxes(){
     const inboxes = await InboxModel.query.fetchAllQuery() as InboxType[]
-    return inboxes.map(inbox => {
+    return await Promise.all(inboxes.map(async inbox => {
         const conn = SocketPool.getInstance().socketCreator.getOrCreateBaileysSocket(inbox.name)
-        const user = conn.sock.user
+        const user = await conn.user()
         const qr = conn.getQRBase64()
         return { ...inbox, user, qr }
-    })
+    }))
 }
 
 export async function saveNewInbox(inbox:Omit<InboxType, "id">){
     const newData = inboxSchema.omit({ id:true }).parse(inbox)
     const newInbox = await InboxModel.insert.value(newData).fetchOneQuery() as InboxType
-    const pool = SocketPool.getInstance()
-    pool.socketCreator.createBaileysSocket(newInbox.name) //
     return newInbox
 }
 

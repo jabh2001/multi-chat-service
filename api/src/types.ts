@@ -67,21 +67,16 @@ export type Base64Buffer= {
 
 export type ImageMessage = {
     image:Buffer
-    caption?:string
 }
 
 export type AudioMessage = {
     audio: Buffer
-    // seconds of the audio or voice note
-    caption?:number
 }
 
 export type VideoMessage = {
     video:Buffer
-    caption?:string
 }
 export type DocumentMessage = {
     document:Buffer
-    caption?:string
 }
-export type MediaMessageType = ( ImageMessage | AudioMessage | VideoMessage | DocumentMessage )
+export type MediaMessageType =  Partial<ImageMessage & AudioMessage & VideoMessage & DocumentMessage > & { caption?:string }

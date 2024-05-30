@@ -1,19 +1,19 @@
 import fs from "fs"
-import { InboxType } from "../../types"
 import { InboxModel } from "../models"
 import { initDBClient } from "../dataBase"
 import { Socket } from "./sockets/socket"
 import { SocketCreator } from "./socket-creator"
+import { InboxType } from "../schemas"
 
 class SocketPool {
     private static instance: SocketPool
-    private pool: Map<string, any> = new Map()
+    private pool: Map<string, Socket> = new Map()
     private _socketCreator: SocketCreator
 
     private constructor() {
         this.pool = new Map()
-        this.init()
         this._socketCreator = new SocketCreator(this)
+        this.init()
     }
 
     get socketCreator(){
@@ -27,8 +27,11 @@ class SocketPool {
         await initDBClient()
         const inboxes = await InboxModel.query.fetchAllQuery<InboxType>()
         for (const inbox of inboxes) {
-            const conn = this.socketCreator.createBaileysSocket(inbox.name)
-            const status = conn.verifyQRFolder()
+            const conn = this.socketCreator.createSocket(inbox)
+            if(!conn)
+                continue
+            this.pool.set(inbox.name, conn)
+            const status = conn && conn.verifyQRFolder()
             if (status) {
                 const watch = fs.watch(conn.qr_folder)
                 watch.on("change", () => {

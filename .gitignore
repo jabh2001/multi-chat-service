@@ -13,10 +13,7 @@ dist-ssr
 *.local
 
 # Editor directories and files
-api/QRs
-api/socket_provider_session_files/
-api/files/contacts
-api/dist
+
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -33,5 +30,8 @@ api/dist
 coverage
 jest.config.js
 
+api/socket_provider_session_files
+api/files/contacts
+api/dist
 api/frontDist
 api/frontDist/*

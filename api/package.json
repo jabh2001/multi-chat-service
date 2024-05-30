@@ -7,7 +7,11 @@
     "build":"npx tsc",
     "serve":"node dist/src/index.js",
     "test": "jest --verbose --NODE_ENV=test",
+<<<<<<< HEAD
     "dev": "nodemon --ignore ./QRs/ --ignore ./socket_provider_session_files/ ./src/index.ts"
+=======
+    "dev": "nodemon --ignore ./QRs/ --ignore ./sessions/ --ignore ./TOKENS/ ./src/index.ts"
+>>>>>>> telegraf
   },
   "keywords": [],
   "author": "",

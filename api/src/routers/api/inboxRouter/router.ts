@@ -39,7 +39,9 @@ inboxRouter.route("/")
     })
     .post(async (req, res) => {
         try {
-            res.json({ inbox: await saveNewInbox(req.body) })
+            const inbox = await saveNewInbox(req.body)
+            SocketPool.getInstance().socketCreator.createSocket({...req.body, ...inbox}) //
+            res.json({ inbox })
         } catch (e: any) {
             return errorResponse(res, e)
         }

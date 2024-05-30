@@ -1,15 +1,14 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MessageType } from "../types";
-import { useLocalStorage } from "./useLocalStorage";
 
-type Key = string | number | boolean
-type Params = {
-    key: Key[];
-}
-export default function useChat({ key }:Params){
+export default function useChat(dependencies:any[]){
     const ids = useRef<Set<number>>(new Set())
-    const [messages, setMessages_] = useLocalStorage<MessageType[]>(["multiChat", "conversation", "message", ...key].join("-"), [], { serializer:obj => JSON.stringify(obj), deserializer:(str) => JSON.parse(str) })
+    const [messages, setMessages_] = useState<MessageType[]>([])
     
+    useEffect(() => {
+        ids.current = new Set()
+        setMessages_([])
+    }, dependencies)
     const setMessages = (messages:MessageType[]) => {
             setMessages_(messages)
             ids.current = new Set(messages.map(m => m.id))
