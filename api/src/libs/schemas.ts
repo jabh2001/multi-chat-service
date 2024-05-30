@@ -39,7 +39,7 @@ export const socialMediaSchema = z.object({
 export const inboxSchema = z.object({
     id:z.number().positive(),
     name:z.string({ required_error:"Name is required" }).max(50, "Name length max 50 character"),
-    channelType:z.enum(["whatsapp"])
+    channelType:z.enum(["whatsapp", "telegram"])
 })
 export const conversationSchema = z.object({
     id:z.number().positive().optional(),

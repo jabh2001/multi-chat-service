@@ -2,9 +2,10 @@ import qrcode from "qrcode"
 import fs from "fs"
 import path from "path"
 import { MediaMessageType } from "../../../types"
-import { MessageType } from "../../schemas"
+import { ContactType, MessageType } from "../../schemas"
 const QR_FOLDER = "./QRs" as const
 
+const BLANK_QR_BASE_64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
 export abstract class Socket {
     static MEDIA_MESSAGE =  {
         text:'text',
@@ -22,16 +23,18 @@ export abstract class Socket {
         return `qr-${this.folder}.png`
     }
     getQRBase64() {
-        const base64 = fs.readFileSync(this.qr_folder, { encoding: 'base64' });
-        return base64
+        return this.isQRBased ? fs.readFileSync(this.qr_folder, { encoding: 'base64' }) : BLANK_QR_BASE_64;
     }
     verifyQRFolder() {
         try {
+            if(!this.isQRBased){
+                return false
+            }
             if (!fs.existsSync(QR_FOLDER)) {
                 fs.mkdirSync(QR_FOLDER);
             }
-            if (!fs.existsSync(this.qr)) {
-                fs.writeFileSync(this.qr_folder, 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
+            if (!fs.existsSync(this.qr_folder)) {
+                fs.writeFileSync(this.qr_folder, BLANK_QR_BASE_64, 'base64');
             }
             return true;
         } catch (e) {
@@ -55,7 +58,10 @@ export abstract class Socket {
     constructor(folder: string) {
         this.folder = folder
     }
+    abstract get isQRBased():boolean;
+    abstract user():Promise<any>;
     abstract sentCreds():void;
+    abstract getContactId(contact:ContactType):Promise<any>
 
     abstract sendMessage(id: string, message: Omit<MessageType, "id">): Promise<Omit<MessageType, "id">>
     abstract sendMediaMessage( id: string, message: Omit<MessageType, "id">, media: MediaMessageType): Promise<Omit<MessageType, "id">>
