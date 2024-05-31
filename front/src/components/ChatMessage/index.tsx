@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import { MessageType } from "../../types";
 import GalleryImage from "../GalleryImage/GalleryImage";
 import ChatAudioPlayer from "../ChatAudioPlayer";
+import ChatVideoPlayer from "../VideoPlayer/VidePlayer";
 
 interface ChatMessageProps {
     message: MessageType
@@ -22,6 +23,9 @@ const ChatMessage = forwardRef<HTMLDivElement, ChatMessageProps>(({ message }: C
                 )}
                 {message.buffer && message.contentType === 'audioMessage' && (
                     <ChatAudioPlayer msg={message} />
+                )}
+                {message.buffer && message.contentType === 'videoMessage' && (
+                    <ChatVideoPlayer src={`data:video/mp4;base64,${message.buffer}`} /> 
                 )}
                 {message.contentType == "text" && message.content !== 'undefined' && (
                     <p>{message.content}</p>

@@ -1,0 +1,11 @@
+.videoContainer {
+    width: 100%;
+    max-width: 400px; /* Ajusta el tamaño máximo del video */
+    margin: 10px 0; /* Ajusta el margen */
+}
+
+.videoPlayer {
+    width: 100%;
+    height: auto;
+    border-radius: 8px; /* Ajusta el borde redondeado */
+}
