@@ -27,6 +27,7 @@ export function ChooseChannelView(){
     )
 }
 
+
 export function ChannelView({ nextStep, handleSubmit }:{ nextStep:()=>void, handleSubmit:(name:string)=>Promise<void>}){
     const [ name, setName ] = useState<string>("")
     const handleClick = async () => {
@@ -45,6 +46,41 @@ export function ChannelView({ nextStep, handleSubmit }:{ nextStep:()=>void, hand
                     <label className="input">
                         <span>Set a inbox name</span>
                         <input type="text" placeholder="Inbox name" onChange={e => setName(e.target.value)} />
+                    </label>
+                </div>
+                <div>
+                    <button className="btn primary" onClick={handleClick}>Next step</button>
+                </div>
+            </div>
+        </View>
+    )
+}
+
+export function ChannelTelegramView({ nextStep, handleSubmit }:{ nextStep:()=>void, handleSubmit:(name:string, token:string)=>Promise<void>}){
+    const [ name, setName ] = useState<string>("")
+    const [ token, settoken ] = useState<string>("")
+    const handleClick = async () => {
+        try {
+            await handleSubmit(name, token)
+            setName("")
+            nextStep()
+        } catch {
+            alert("Error")
+        }
+    }
+    return (
+        <View title="Set a inbox data">
+            <div className={styles.channelContainer}>
+                <div>
+                    <label className="input">
+                        <span>Set a inbox name</span>
+                        <input type="text" placeholder="Inbox name" onChange={e => setName(e.target.value)} />
+                    </label>
+                </div>
+                <div>
+                    <label className="input">
+                        <span>Set the Telegram Token</span>
+                        <input type="text" placeholder="telegram token" onChange={e => settoken(e.target.value)} />
                     </label>
                 </div>
                 <div>

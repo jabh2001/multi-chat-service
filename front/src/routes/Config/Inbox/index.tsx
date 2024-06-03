@@ -1,5 +1,5 @@
 import { Link, type RouteObject } from "react-router-dom";
-import NewInboxPage from "./NewInboxPage";
+import NewInboxPage, { NewInboxTelegramPage } from "./NewInboxPage";
 import styles from "./index.module.css"
 import TrashIcon from "../../../components/icons/TrashIcon";
 import { useEffect, useState } from "react";
@@ -152,7 +152,7 @@ const inboxesRoutes: RouteObject[] = [
     {
 
         path: baseName + "/new/telegram",
-        element: <NewInboxPage channel="telegram" />
+        element: <NewInboxTelegramPage channel="telegram" />
     },
 
 ];

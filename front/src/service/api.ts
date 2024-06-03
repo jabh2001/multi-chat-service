@@ -269,7 +269,7 @@ export async function getInboxes() {
     }
 }
 
-export async function postInbox(inbox: { name: string, channelType: string }) {
+export async function postInbox(inbox: { name: string, channelType: string, token?:string }) {
     try {
         const { data } = await instance.post<{ inbox: InboxType }>("/inbox", inbox)
         return data.inbox
