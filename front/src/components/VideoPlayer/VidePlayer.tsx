@@ -12,12 +12,6 @@ const ChatVideoPlayer: React.FC<ChatVideoPlayerProps> = ({ src }) => {
         if (videoRef.current) {
             if (videoRef.current.requestFullscreen) {
                 videoRef.current.requestFullscreen();
-            } else if (videoRef.current.mozRequestFullScreen) {
-                videoRef.current.mozRequestFullScreen();
-            } else if (videoRef.current.webkitRequestFullscreen) {
-                videoRef.current.webkitRequestFullscreen();
-            } else if (videoRef.current.msRequestFullscreen) {
-                videoRef.current.msRequestFullscreen();
             }
         }
     };

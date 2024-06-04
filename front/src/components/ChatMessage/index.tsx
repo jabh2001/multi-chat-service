@@ -3,7 +3,7 @@ import styles from './index.module.css'
 import { MessageType } from "../../types";
 import GalleryImage from "../GalleryImage/GalleryImage";
 import ChatAudioPlayer from "../ChatAudioPlayer";
-import ChatVideoPlayer from "../VideoPlayer/VidePlayer";
+import ChatVideoPlayer from "../VideoPlayer/VidePlayer";
 import ChatDocumentMessage from "../ChatDocumentMessage";
 
 interface ChatMessageProps {
