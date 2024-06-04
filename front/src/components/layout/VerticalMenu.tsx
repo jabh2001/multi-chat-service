@@ -31,7 +31,7 @@ export default function VerticalNavBar(){
                         <MenuItem icon={<PhoneIcon />} title="Ver todos" to="/contacts" />
                         <LabelSection basePath="contacts" />
                     </ListItem>
-                    <ListItem icon={<HomeIcon />} title="" name="A2"></ListItem>
+                    {/* <ListItem icon={<HomeIcon />} title="" name="A2"></ListItem> */}
                     <ListItem icon={<ConfigIcon />} title="Configuraciones" name="config">
                         {/* <MenuItem icon={<HomeIcon />} title="Cuenta" to="/config/account" /> */}
                         <MenuItem icon={<AgentIcon />} title="Agentes" to="/config/agents" />

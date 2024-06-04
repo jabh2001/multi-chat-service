@@ -2,16 +2,37 @@ import axios from "axios";
 import { AgentType, ContactType, ConversationType, InboxType, LabelType, MessageType, SocialMediaType, TeamType, UserType } from "../types";
 import { ConversationNoteType, FastMessageType } from "../libs/schemas";
 
+// a super secret admin password
 const baseURL = import.meta.env.MODE === "development" ? import.meta.env.VITE_API_URL : import.meta.env.VITE_PROD_API_URL
 
-const instance = axios.create({ baseURL, withCredentials: true })
+const tokenKey = "multi-chat-token-store"
+const saveToken = (token:string) => {
+    window.localStorage.setItem(tokenKey, token)
+    return token 
+}
+const getToken = () => {
+    const token = window.localStorage.getItem(tokenKey)
+    return token
+}
+const removeToken = () => {
+    window.localStorage.removeItem(tokenKey)
+
+}
+const createInstance = () => {
+    const token = getToken()
+    return axios.create({ baseURL, withCredentials:true, headers: token ? { Authorization:"bearer " + token }:undefined})
+}
+
+let instance = createInstance()
 
 export async function testCookie() {
-    await instance.post("/login", { "email": import.meta.env.VITE_ADMIN_EMAIL, "password": import.meta.env.VITE_ADMIN_PASSWORD })
+    await instance.post<{ token:string }>("/login", { "email": import.meta.env.VITE_ADMIN_EMAIL, "password": import.meta.env.VITE_ADMIN_PASSWORD })
 }
 export async function signIn(email: string, password: string) {
     try {
         const { data } = await instance.post<LoginResponse>("/login", { email, password })
+        saveToken(data.token)
+        instance = createInstance()
         return data
     } catch (e) {
         return Promise.reject(e)
@@ -20,6 +41,8 @@ export async function signIn(email: string, password: string) {
 export async function signOut() {
     try {
         const { data } = await instance.post<{ status: boolean }>("/logout")
+        removeToken()
+        instance = createInstance()
         return data
     } catch (e) {
         return Promise.reject(e)
@@ -269,9 +292,9 @@ export async function getInboxes() {
     }
 }
 
-export async function postInbox(inbox: { name: string, channelType: string, token?:string }) {
+export async function postInbox({ name, channelType, token:telegramToken}: { name: string, channelType: string, token?:string }) {
     try {
-        const { data } = await instance.post<{ inbox: InboxType }>("/inbox", inbox)
+        const { data } = await instance.post<{ inbox: InboxType }>("/inbox", { name, channelType, telegramToken })
         return data.inbox
     } catch (e) {
         return Promise.reject(e)
