@@ -5,7 +5,10 @@ import SocketPool from "../libs/message-socket/socketConnectionPool";
 export async function getInboxes(){
     const inboxes = await InboxModel.query.fetchAllQuery() as InboxType[]
     return await Promise.all(inboxes.map(async inbox => {
-        const conn = SocketPool.getInstance().socketCreator.getOrCreateBaileysSocket(inbox.name)
+        const conn = SocketPool.getInstance().getConnection(inbox.name)
+        if(!conn){
+            return {}
+        }
         const user = await conn.user()
         const qr = conn.getQRBase64()
         return { ...inbox, user, qr }
@@ -32,8 +35,10 @@ export async function updateInbox(inbox:InboxType, newData:Partial<InboxType>){
 export async function deleteInbox(inboxId:InboxType["id"]){
     const inbox = await InboxModel.query.filter(InboxModel.c.id.equalTo(inboxId)).fetchOneQuery() as InboxType
     const socketPool = SocketPool.getInstance()
-    const conn = socketPool.socketCreator.getOrCreateBaileysSocket(inbox.name)
-    conn.logout()
-    socketPool.deleteConnection(conn)
+    const conn = socketPool.getConnection(inbox.name)
+    if(conn){
+        await conn.logout()
+        socketPool.deleteConnection(conn)
+    }
     return InboxModel.delete.filter(InboxModel.c.id.equalTo(inboxId)).fetchAllQuery()
 }

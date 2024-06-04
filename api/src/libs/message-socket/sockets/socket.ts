@@ -58,6 +58,7 @@ export abstract class Socket {
     constructor(folder: string) {
         this.folder = folder
     }
+    abstract logout():Promise<void>
     abstract get isQRBased():boolean;
     abstract user():Promise<any>;
     abstract sentCreds():void;

@@ -173,6 +173,10 @@ export class TelegramTelegrafSocket extends Socket {
     async getContactId(contact: ContactType) {
         return contact.phoneNumber
     }
+    async logout(): Promise<void> {
+        this.bot.stop()
+        TelegramTelegrafSocket.removeToken(this.folder)
+    }
     static fromFolder(folder:string){
         const token = TelegramTelegrafSocket.getToken(folder)
         if( !token ) return null
@@ -183,6 +187,16 @@ export class TelegramTelegrafSocket extends Socket {
             fs.mkdirSync(TELEGRAM_BOTS_TOKEN_FOLDER)
         }
         fs.writeFileSync(`${TELEGRAM_BOTS_TOKEN_FOLDER}/${folder}.json`, JSON.stringify({ token }, null, 4), "utf8")
+
+    }
+    static removeToken(folder:string){
+        if(!fs.existsSync(TELEGRAM_BOTS_TOKEN_FOLDER)){
+            fs.mkdirSync(TELEGRAM_BOTS_TOKEN_FOLDER)
+        }
+        const FILE = `${TELEGRAM_BOTS_TOKEN_FOLDER}/${folder}.json`
+        if(fs.existsSync(FILE)){
+            fs.unlinkSync(FILE)
+        }
 
     }
     static getToken( folder:string){
