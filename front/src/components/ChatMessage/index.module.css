@@ -53,7 +53,7 @@
         animation: bounce .3s ease-in-out infinite alternate;
     }
 }
-.container p, .container span{
+.container p.whiteText, .container span.whiteText{
     color: white;
     width: 100%;
     text-wrap:pretty;
