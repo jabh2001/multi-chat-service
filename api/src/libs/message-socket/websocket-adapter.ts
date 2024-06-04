@@ -96,6 +96,7 @@ export default class WS {
                     message = await socket.sendMediaMessage(await socket.getContactId(contact), message, { audio:buffer!})
                 }  else if (isDocument(messageType)) {
                     message.contentType = Socket.MEDIA_MESSAGE.documentMessage
+                    message.content = text
                     message = await socket.sendMediaMessage(await socket.getContactId(contact), message, { document:buffer!})
                 }
                 const result = await saveNewMessageInConversation(conversationId, message)

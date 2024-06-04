@@ -99,9 +99,9 @@ export class WhatsAppBaileysSocket extends Socket {
             return null
         }
         const { message } = m
-        const { imageMessage, audioMessage, videoMessage, documentMessage, } = message
+        const { imageMessage, audioMessage, videoMessage, documentMessage, documentWithCaptionMessage, } = message
         
-        if(Object.values({ imageMessage, audioMessage, videoMessage, documentMessage }).filter(v => v !== null).length == 0) {
+        if(Object.values({ imageMessage, audioMessage, videoMessage, documentMessage, documentWithCaptionMessage }).filter(v => v !== null).length == 0) {
             return null
         }
 
@@ -123,10 +123,16 @@ export class WhatsAppBaileysSocket extends Socket {
                 base64Buffer.caption = audioMessage.seconds?.toString()
             } else if  (videoMessage) {
                 base64Buffer.tipo = Socket.MEDIA_MESSAGE.videoMessage
-            }else if  (documentMessage) {
+            } else if  (documentMessage) {
                 base64Buffer.tipo = Socket.MEDIA_MESSAGE.documentMessage
+                base64Buffer.caption = documentMessage.fileName
+            } else if  (documentWithCaptionMessage) {
+                if(!documentWithCaptionMessage?.message?.documentMessage){
+                    return null
+                }
+                base64Buffer.tipo = Socket.MEDIA_MESSAGE.documentMessage
+                base64Buffer.caption = documentWithCaptionMessage.message.documentMessage.fileName
             }
-
             return  base64Buffer
         } catch (error) {
             console.error('Error al descargar el medio:', error);
@@ -135,7 +141,6 @@ export class WhatsAppBaileysSocket extends Socket {
     }
     async sendMessageorContact({ m }: { m: proto.IWebMessageInfo }): Promise<void> {
         const wss = getWss()
-
         if (!m.message) return
         if (m.key.remoteJid?.split('@')[1] === 'g.us') return
 
