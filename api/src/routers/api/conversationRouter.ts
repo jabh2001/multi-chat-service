@@ -7,6 +7,7 @@ const conversationRouter = Router()
 conversationRouter.get("/", async (req, res) => {
         try{
             const conversations = await getConversations(req.query)
+            console.log(conversations, 'conversations en el back')
             res.json({ conversations:conversations.map((c:any) => {
                 const { conversation, contact, ...rest } = c
                 return { ...conversation, contact:{

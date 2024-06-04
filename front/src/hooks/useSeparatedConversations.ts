@@ -36,6 +36,7 @@ export const useInnerConversationStore = create<Store>(set => {
         fetch: async ({ label, inbox }) => {
             try {
                 const conversations = await getAllConversations({ label, inbox })
+                console.log('estas son las conversaciones', conversations)
                 set({ conversations:conversations.sort((a, b) => new Date(b.lastMessageDate).getTime() - new Date(a.lastMessageDate).getTime())})
             } catch (e){
                 return Promise.reject(e)

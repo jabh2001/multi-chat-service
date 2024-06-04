@@ -1,4 +1,5 @@
 .videoContainer {
+    position: relative;
     width: 100%;
     max-width: 400px; /* Ajusta el tamaño máximo del video */
     margin: 10px 0; /* Ajusta el margen */
@@ -8,4 +9,28 @@
     width: 100%;
     height: auto;
     border-radius: 8px; /* Ajusta el borde redondeado */
+}
+
+.videoPlayer:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+.videoPlayer:-moz-full-screen {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+.videoPlayer:-ms-fullscreen {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+
+.videoPlayer:fullscreen {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
 }
