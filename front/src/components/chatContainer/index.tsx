@@ -24,13 +24,10 @@ function ChatContainer() {
             };
         }
     }, [conversation]);
-    useEffect(() => {
-        console.log(conversation)
-    }, [conversation])
 
     return (
         <WebSocketContext.Provider value={ws}>
-            <ContactHeader tab={tab} setTab={setTab} />
+            { conversation ? <ContactHeader tab={tab} setTab={setTab} /> : <div></div> }
             {
                 tab == 1 ?(
                     <div className={styles.layout} ref={rootRef}>

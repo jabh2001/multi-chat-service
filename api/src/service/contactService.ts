@@ -8,8 +8,12 @@ import { getContactAvatar, saveContactAvatar } from "./fileService";
 
 const sseClients = getClientList()
 
+const url = process.env.NODE_ENV === "dev" ? "http://127.0.0.1:3000" : ""
 export const getContactAvatarUrl = (req:Request, contactId:any) =>{
     return `${req.protocol}://${req.get("host")}/img/contact/${contactId}`
+}
+export const getContactAvatarUrlWithoutReq = (contactId:any) =>{
+    return `${url}/img/contact/${contactId}`
 }
 export const getContacts:GetContactsType = async (labelId=undefined) => {
     let contactsQuery = ContactModel.query
@@ -38,13 +42,13 @@ export const getContactById:GetContactByIdType = async (id) => {
     return await ContactModel.query.filter(ContactModel.c.id.equalTo(id)).fetchOneQuery<ContactType>()
 }
 
-export const getOrCreateContactByPhoneNumber = async (phoneNumber:string, contactName:string) => {
+export const getOrCreateContactByPhoneNumber = async (phoneNumber:string, contactName:string, picture?:string | undefined) => {
     const existingContact =  await ContactModel.query.filter(ContactModel.c.phoneNumber.equalTo(phoneNumber)).fetchAllQuery<ContactType>()
     
     if(existingContact.length > 0){
         return existingContact[0]
     }
-    const contact = await saveNewContact({ phoneNumber, name:contactName })
+    const contact = await saveNewContact({ phoneNumber, name:contactName, picture })
     return contact
 }
 
@@ -97,7 +101,7 @@ export const deleteSocialMedia:updateSocialMediaType = async (socialMediaId) => 
 }
 
 type GetContactsType = (label?:undefined | number) => Promise<ContactType[]>
-type SaveNewContactType = (newContact:Partial<Omit<ContactType, "id">>) => Promise<ContactType>
+type SaveNewContactType = (newContact:any) => Promise<ContactType>
 type GetContactByIdType = (id:ContactType["id"]) => Promise<ContactType>
 type UpdateContactType = (contact:ContactType, newData:Partial<ContactType>) => Promise<ContactType>
 type DeleteContactType = (contact:ContactType) => Promise<ContactType>

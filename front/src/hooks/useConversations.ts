@@ -21,7 +21,7 @@ export const useConversation = ()=>{
   const conversation = useConversationStore(state => state.conversation)
   const setContact = useConversationStore(state => state.setContact)
   const contact = useConversationStore(state => state.contact)
-  const { messages, setMessages, pushMessages, insertMessages:insert} = useChat([conversation])
+  const { messages, messagesGroup, setMessages, pushMessages, insertMessages:insert} = useChat([conversation])
 
   const [ isLoading, setIsLoading ] = useState(false)
   const [ isComplete, setIsComplete ] = useState(false)
@@ -51,9 +51,7 @@ export const useConversation = ()=>{
       if(!isComplete && !isLoading && messages.length > 0){
           setIsLoading(true)
           const element = observeRef.current
-          console.log(1)
           const newMessages = await getAllMessage(conversation.inbox.id, conversation.id, messages.length)
-          console.log(12)
           if(newMessages.length ==0){
             setIsComplete(true)
             setIsLoading(false)
@@ -71,6 +69,7 @@ export const useConversation = ()=>{
 
   return {
     messages,
+    messagesGroup,
     rootRef,
     observeRef,
     pushMessages,
@@ -83,3 +82,4 @@ export const useConversation = ()=>{
     isComplete,
   }
 }
+

@@ -1,28 +1,37 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import VerticalMenu from "./VerticalMenu";
-import styles from "./index.module.css"
-import SSEProvider from "../SSEProvider";
-import useAuth from "../../hooks/useAuth";
-import { useEffect } from "react";
+import React, { useState } from 'react';
+import Sidebar from './Sidebar/index';
+import { Outlet } from 'react-router-dom';
+import SSEProvider from '../SSEProvider';
 
-export default function Layout(){
-    const user = useAuth(store => store.user)
-    const navigate = useNavigate()
-    useEffect(()=>{
-        if(user === null){
-            navigate("/login")
-        }
-    }, [user])
-    return (
-        <SSEProvider>
-            <div className={styles.layout}>
-                <div>
-                    <VerticalMenu />
-                </div>
-                <main>
-                    <Outlet />
-                </main>
-            </div>
-        </SSEProvider>
-    )
-}
+const DefaultLayout: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  return (
+    <SSEProvider>
+      <div>
+        {/* <!-- ===== Page Wrapper Start ===== --> */}
+        <div className="flex h-screen overflow-hidden">
+          {/* <!-- ===== Sidebar Start ===== --> */}
+          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          {/* <!-- ===== Sidebar End ===== --> */}
+
+          {/* <!-- ===== Content Area Start ===== --> */}
+          <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+
+            {/* <!-- ===== Main Content Start ===== --> */}
+            <main>
+              <div className="mx-auto bg-slate-900">
+                <Outlet />
+              </div>
+            </main>
+            {/* <!-- ===== Main Content End ===== --> */}
+          </div>
+          {/* <!-- ===== Content Area End ===== --> */}
+        </div>
+        {/* <!-- ===== Page Wrapper End ===== --> */}
+      </div>
+    </SSEProvider>
+  );
+};
+
+export default DefaultLayout;

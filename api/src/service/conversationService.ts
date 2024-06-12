@@ -3,10 +3,11 @@ import { ContactLabelModel, ContactModel, ConversationModel, InboxModel, Message
 import { Join, RawSQL } from "../libs/orm/query";
 import { type ConversationSchemaType, conversationSchema } from "../libs/schemas";
 import { ConversationType } from "../types";
+import { getContactAvatarUrl, getContactAvatarUrlWithoutReq } from "./contactService";
 
 const sseClients = getClientList()
 
-export async function getConversations({ inbox, label}:{ inbox?:string, label?:string}={}){
+const constructConversationQuery = () => {
     const lastMessage = (
         MessageModel.query.select(MessageModel.c.content)
         .filter(MessageModel.c.conversationId.equalTo(ConversationModel.c.id))
@@ -21,13 +22,17 @@ export async function getConversations({ inbox, label}:{ inbox?:string, label?:s
         .limit(1)
         .subquery("lastMessageDate")
     )
-    const messageCount = new RawSQL(`(SELECT count(*) FROM ${MessageModel.q} WHERE ${MessageModel.c.conversationId.q} =${ConversationModel.c.id.q} AND ${MessageModel.c.status.q} = false)`).label("messageCount")
+    const messageCount = new RawSQL(`(SELECT count(*) FROM ${MessageModel.q} WHERE ${MessageModel.c.conversationId.q} =${ConversationModel.c.id.q} AND ${MessageModel.c.status.q} is false)`).label("messageCount")
     let query = (
         ConversationModel.query.
         select(ConversationModel, InboxModel, ContactModel, lastMessage, lastMessageDate, messageCount)
         .join(ConversationModel.r.inbox, Join.INNER)
         .join(ConversationModel.r.sender, Join.INNER)
     )
+    return query
+}
+export async function getConversations({ inbox, label}:{ inbox?:string, label?:string}={}){
+    let query = constructConversationQuery()
     if(label){
         query = query.join(ContactLabelModel, ContactLabelModel.c.contactId, ConversationModel.c.senderId).filter(ContactLabelModel.c.labelId.equalTo(label))
     } else if(inbox){
@@ -55,7 +60,18 @@ export async function getInboxConversations(inboxId:any){
 
 export async function saveNewConversation(conversation:Omit<ConversationSchemaType, "id">){
     const newConversation = await ConversationModel.insert.value({...conversation }).fetchOneQuery<ConversationType>();
-    sseClients.emitToClients("insert-conversation", newConversation)
+    let allData = await constructConversationQuery().filter(ConversationModel.c.id.equalTo(newConversation.id)).fetchOneQuery<any>()
+    const sendData = {
+        ...allData,
+        contact:{
+            ...allData,
+            avatarUrl:getContactAvatarUrlWithoutReq(allData.contact.id)
+        },
+        lastMessage: "",
+        lastMessageDate: "",
+        messageCount: "1",
+    }
+    sseClients.emitToClients("insert-conversation", sendData)
     return newConversation
 }
 
@@ -84,4 +100,10 @@ export async function getOrCreateConversation(inboxId:any, senderId:any){
         return conversations[0]
     }
     return await saveNewConversation({ inboxId, senderId })
+}
+export async function getConversationUnreadMessageCountById(conversationId:any) {
+    
+    const messageCount = new RawSQL(`(SELECT count(*) FROM ${MessageModel.q} WHERE ${MessageModel.c.conversationId.q} =${ConversationModel.c.id.q} AND ${MessageModel.c.status.q} is false)`).label("messageCount")
+    let query = ConversationModel.query.select(messageCount).filter(ConversationModel.c.id.equalTo(conversationId))
+    return await query.fetchOneQuery<{messageCount:any}>()
 }

@@ -67,3 +67,9 @@ export type MessageType = {
     created_at:Date
     user?:Partial<UserType>
 }
+
+export type MessageGroupType = {
+    contact?:ContactType
+    
+    messages:MessageType[]
+}

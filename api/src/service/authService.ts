@@ -7,7 +7,7 @@ const SUPER_AUTH_ADMIN_TOKEN = process.env.SUPER_AUTH_ADMIN_TOKEN as string
 const USER_ADMIN_PASSWORD = process.env.USER_ADMIN_PASSWORD as string
 const JWTCookieName = "jwt"
 
-const expiresIn = "1h"
+const expiresIn = "24h"
 const maxAge = 1000 * 60 * 60
 
 export function createJWTToken(userId: any) {

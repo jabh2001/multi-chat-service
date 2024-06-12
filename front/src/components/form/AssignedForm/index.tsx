@@ -9,13 +9,15 @@ import { AxiosError } from "axios"
 import { assignedConversation } from "../../../service/api"
 import { useConversationStore } from "../../../hooks/useConversations"
 import useSnackbar from "../../../hooks/useSnackbar"
-import AgentProtection from "../AgentProtection"
+import { Button } from "@/components/ui/button"
+import useAuth from "../../../hooks/useAuth"
 
 type Inputs = {
     assigned:string
 }
 export default function AssignedForm({ onAdd }:{ onAdd?:(conversation:any) => void}){
     const conversation = useConversationStore(state=>state.conversation)
+    const user = useAuth(store => store.user)
     const { open, handleClose, message, color, error, success} = useSnackbar()
     const {handleSubmit, control} = useForm<Inputs>()
     const {teams} = useTeam()
@@ -37,9 +39,8 @@ export default function AssignedForm({ onAdd }:{ onAdd?:(conversation:any) => vo
             }
         }
     })
-    return (
-        <form onSubmit={onSubmit} style={{ padding: 8, borderBlock:"1px solid #ddd"}}>
-            <AgentProtection >
+    return user?.role === "admin" && (
+        <form onSubmit={onSubmit} className="p-2 border border-x-0 border-white">
             <h3>Asignar esta conversación a:</h3>
             <Select control={control} label='Agente asignado' name="assigned" dark>
                 <Separated text='Usuarios' />
@@ -65,15 +66,14 @@ export default function AssignedForm({ onAdd }:{ onAdd?:(conversation:any) => vo
                     ))
                 }
             </Select>
-            <div style={{ display:"flex", justifyContent:"center" }}>
-                <button className="btn primary" style={{ width:"80%"}}>Asignar</button>
+            <div className="flex justify-center">
+                <Button size="lg" className="w-4/5">Asignar</Button>
             </div>
             <Snackbar open={open} handleClose={handleClose} color={color}>
                 {
                     message.map(m => ( <p>{m}</p> ) )
                 }
             </Snackbar>
-            </AgentProtection>
         </form>
     )
 }

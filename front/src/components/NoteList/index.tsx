@@ -10,6 +10,8 @@ import PencilIcon from "../icons/PencilIcon"
 import { AxiosError } from "axios"
 import useSnackbar from "../../hooks/useSnackbar"
 import Snackbar from "../Snackbar"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 
 export default function NoteList(){
     const { open, handleClose, message, success, error } = useSnackbar()
@@ -47,16 +49,26 @@ export default function NoteList(){
             <div className={styles.notes}>
                 {
                     notes.map(note => (
-                        <div key={note.id} className={`${styles.note} ${note.important && styles.important}`}>
-                            <p>{note.content}</p>
-                            <span className={styles.separated}></span>
-                            <button className={styles.trash} onClick={() => handleDelete(note)}>
-                                <TrashIcon />
-                            </button>
-                            <button className={styles.pencil} onClick={() => setEditNote(note)}>
-                                <PencilIcon />
-                            </button>
-                        </div>
+                        <Card key={"notes_" + note.id} className="bg-slate-900/75">
+                            <CardHeader>
+                                <CardTitle>{note.important ? "Importante" : "Normal"}</CardTitle>
+                                <CardDescription>{note.content}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Button variant={"destructive"} className="mr-4" onClick={() => handleDelete(note)}>
+                                    <div className={"w-4 fill-white mr-2"}>
+                                        <TrashIcon />
+                                    </div>
+                                    Eliminar esta nota
+                                </Button>
+                                <Button onClick={() => setEditNote(note)} className="bg-orange-500 text-white">
+                                    <div className={"w-4 fill-white mr-2"}>
+                                        <PencilIcon />
+                                    </div>
+                                    Eliminar esta nota
+                                </Button>
+                            </CardContent>
+                        </Card>
                     ))
                 }
             </div>

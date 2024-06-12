@@ -14,12 +14,11 @@ export const SideBar: FC<sideBarProps> = () => {
     if(!contact){
         return <></>
     }
-    return <div className='sideBar'>
-        <ContactCard contact={contact} />
-        
-        <div className="actions">
-            <p>Conversation actions</p>
+    return <div className='sideBar text-white flex justify-between flex-col h-full'>
+        <div>
+            <ContactCard contact={contact} />
         </div>
+        
         {/* estos serán selectores */}
         <div className="agentInfo">
             <AssignedForm />

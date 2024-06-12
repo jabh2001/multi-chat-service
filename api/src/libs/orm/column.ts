@@ -113,8 +113,8 @@ export class StringColumn extends Column {
 }
 
 export class BooleanColumn extends Column {
-    constructor (name : string, nullable:boolean=false ) { 
-        super(name, "BOOLEAN", 0, { nullable })
+    constructor (name : string, defaultValue:boolean=false ) { 
+        super(name, "BOOLEAN", 0, { default:defaultValue })
     }
 }
 

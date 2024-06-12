@@ -13,12 +13,13 @@
     padding: 10px;
     margin: 6px;
     border-radius: 7px 7px 0px 7px;
-    background-color: #369eff;
+    background-color: #bcd8f3;
     max-width: 60%;
     min-width: 30%;
     animation: up .25s ease forwards;
+    box-shadow: 5px 5px 15px #0004;
     &.whatsapp{
-        background-color: #176b5b;
+        background-color: #aee4c3;
     }
     & .messageUsername{
         display: flex;
@@ -33,7 +34,7 @@
 .message.incoming{
     padding-right: 10px;
     border-radius: 7px 7px 7px 0px;
-    background-color: #697076;
+    background-color: #f5f6f6;
 }
 .message.load{
     background-color: #44474a;
@@ -54,10 +55,11 @@
     }
 }
 .container p.whiteText, .container span.whiteText{
-    color: white;
+    color: #000;
     width: 100%;
     text-wrap:pretty;
     word-break: break-word;
+    font-size: 1rem;
 }
 @media(width > 1280px){
     .container p{

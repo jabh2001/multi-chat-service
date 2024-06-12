@@ -33,7 +33,6 @@ export class WhatsAppBaileysSocket extends Socket {
 
         const { state, saveCreds } = await useMultiFileAuthState(`socket_provider_session_files/sessions/${this.folder}`)
         const sock = makeWASocket({ auth: state, logger: pino({ level: "silent" }) })
-
         sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
             qr && this.saveQRCode(qr)
             if (connection === "close") {
@@ -48,6 +47,7 @@ export class WhatsAppBaileysSocket extends Socket {
                 this.sentCreds()
             }
         })
+        // const ppUrl = await sock.profilePictureUrl("xyz@g.us", 'image')
         sock.ev.on("creds.update", async () => await Promise.all([saveCreds(), this.sentCreds()]))
         sock.ev.on("messages.upsert", evt => this.messageUpsert(evt))
         this.sock = sock
@@ -143,7 +143,6 @@ export class WhatsAppBaileysSocket extends Socket {
         const wss = getWss()
         if (!m.message) return
         if (m.key.remoteJid?.split('@')[1] === 'g.us') return
-
         const base64Buffer =  await this.getBase64Buffer(m)
         const phoneNumber = '+' + m.key.remoteJid?.split('@')[0]
         const text = m.message?.conversation || m.message?.extendedTextMessage?.text
@@ -161,7 +160,8 @@ export class WhatsAppBaileysSocket extends Socket {
             if (phoneNumber == '+status') return
             if(m.key.fromMe ===true)return
             const inbox = await getInboxByName(this.folder)
-            const contact = await getOrCreateContactByPhoneNumber(phoneNumber, m.pushName!)
+            const base64ProfilePhoto = m.key.remoteJid ? await this.getBase64ProfilePhoto(m.key.remoteJid) : undefined
+            const contact = await getOrCreateContactByPhoneNumber(phoneNumber, m.pushName!, base64ProfilePhoto)
             const conversation = await getOrCreateConversation(inbox.id, contact.id)
             result = {
                 ...contact,
@@ -188,6 +188,16 @@ export class WhatsAppBaileysSocket extends Socket {
                 }
             }
         }
+    }
+    async getBase64ProfilePhoto(remoteJid:string){
+        const ppUrl = await this.sock.profilePictureUrl(remoteJid, 'image')
+        if(ppUrl){
+            const buffer = await fetch(ppUrl).then(response => response.arrayBuffer())
+            const base64 = Buffer.from( buffer ).toString( 'base64' )
+            return base64
+        }   
+        return undefined
+        
     }
     async messageUpsert({ messages, type }: { messages: proto.IWebMessageInfo[], type: MessageUpsertType }) {
         for (const m of messages){

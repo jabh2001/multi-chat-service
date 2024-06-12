@@ -3,7 +3,7 @@ import { ConversationModel, InboxModel, MessageModel, UserModel } from "../libs/
 import { MessageType, messageSchema } from "../libs/schemas";
 import SocketPool from "../libs/message-socket/socketConnectionPool";
 import { ContactType, ConversationType, InboxType } from "../types";
-import { saveNewConversation } from "./conversationService";
+import { getConversationUnreadMessageCountById, saveNewConversation } from "./conversationService";
 const sseClients = getClientList()
 
 export async function getMessageByConversation(conversationId:any, offset:number=0){
@@ -21,6 +21,8 @@ export async function saveNewMessageInConversation(conversationId:any, message:a
     const newData = messageSchema.omit({ id:true, conversationId:true }).parse(message)
     const newMessage =  await MessageModel.insert.value({ ...newData, conversationId }).fetchOneQuery<MessageType>()
     sseClients.emitToClients("update-conversation-last-message", {conversationId, lastMessage:newMessage.content || "", lastMessageDate:String(newMessage.createdAt)})
+    const { messageCount } = await getConversationUnreadMessageCountById(conversationId)
+    sseClients.emitToClients("update-conversation", { id:conversationId, messageCount })
     return newMessage
 }
 
@@ -54,4 +56,12 @@ export async function sendMessageToContact(contact:ContactType, { inboxName, mes
     const sendMsg = await conn.sendMessage(contact.phoneNumber.slice(1), msg)
     const result = await saveNewMessageInConversation(conversation.id, sendMsg)
     return result
+}
+
+export const viewMessageInConversation = async (conversationId:any) => {
+    const query = MessageModel.update.values({ status:true }).filter(MessageModel.c.conversationId.equalTo(conversationId)).execute()
+    await query
+    const { messageCount } = await getConversationUnreadMessageCountById(conversationId)
+    sseClients.emitToClients("update-conversation", {id:conversationId, messageCount})
+    return true
 }

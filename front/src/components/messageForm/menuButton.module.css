@@ -9,7 +9,7 @@
     height: 100%;
     border-radius: 8px;
     color: #fff;
-    background-color: var(--active-button-primary-color);
+    background-color: transparent;
     display: grid;
     place-content: center;
     border: none;
@@ -18,16 +18,15 @@
     user-select: none;
 }
 .button svg {
-    width: 64px;
-    transform: rotate(-45deg);
+    width: 24px;
     transition: transform .1s ;
     fill: #fff;
 }
 .button:hover svg, .menuContainer.visible ~ .button > svg {
-    transform: rotate(0deg);
+    fill: var(--active-button-primary-color);
 }
 .menuContainer{
-    width: 150%;
+    width: 350%;
     position: absolute;
     bottom: calc(100% + 12px);
     border-radius: 8px;
@@ -60,7 +59,7 @@
     }
 }
 .optionIcon{
-    flex-grow: 1;
+    flex-basis: 24px;
     fill: #fff;
 }
 .optionTitle{

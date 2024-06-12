@@ -46,7 +46,7 @@ export type ConversationType = {
     id: number,
     contact:ContactType,
     inbox:InboxType,
-    unread_count:number,
+    messageCount:number | string,
     messages:MessageType[],
 }
 

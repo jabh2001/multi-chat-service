@@ -168,7 +168,7 @@ function SendMessageFormModal({ contact }:{ contact:ContactType}){
                                 <Option 
                                     key={`inbox_option_${inbox.id}`} 
                                     value={inbox.name} 
-                                    label={inbox.name.toUpperCase()}
+                                    label={inbox.name?.toUpperCase()}
                                 />
                             ))
                         }

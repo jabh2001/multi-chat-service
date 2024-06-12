@@ -1,8 +1,9 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
-import { ContactDetailPage, ContactsPage, ConversationsPage, IndexPage, QrPage } from "./routes"
+import { ContactDetailPage, ContactsPage, IndexPage, QrPage } from "./routes"
 import Layout from "./components/layout"
 import configRouter from "./routes/Config"
 import LoginPage from "./routes/LoginPage"
+import ChatPage from "./routes/ChatPage"
 
 const router = createBrowserRouter([
   {
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
       },
       {
         path:"/conversations",
-        element: <ConversationsPage />
+        element: <ChatPage />
       },
       {
         path:"/contacts",

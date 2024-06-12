@@ -1,7 +1,7 @@
 .button {
     position: relative;
     aspect-ratio: 1;
-    width: 40px;
+    width: 50px;
     border-radius: 50%;
     border: none;
     cursor: pointer;
@@ -13,9 +13,6 @@
     overflow: hidden;
     &:hover{
         fill: var(--active-button-primary-color);
-    }
-    &.rotate:hover{
-        transform: rotate(90deg);
     }
     &.recording .recordBg{
         transform: translateY(0);

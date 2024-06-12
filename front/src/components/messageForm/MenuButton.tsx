@@ -1,13 +1,18 @@
 import { useRef, useState } from "react"
 import CameraIcon from "../icons/CameraIcon"
-import XMarkIcon from "../icons/XMarkIcon"
 import useClickOutside from "../../hooks/useClickOutside"
 import useMessageMedia from "../../hooks/useMessageMedia"
-import { Modal, ModalBody, ModalFooter, ModalHeader } from "../Modal"
+import { Modal, ModalAction, ModalBody, ModalFooter, ModalHeader } from "../Modal"
 import { useFastMessage } from "../../hooks/useFastMessage"
 import { FastMessageType } from "../../libs/schemas"
 import { useDebounce } from "../../hooks/useDebounce"
 import styles from "./menuButton.module.css"
+import useAudioRecorder from "../../hooks/useAudioRecorder"
+import MicrophoneIcon from "../icons/MicrophoneIcon"
+import useCamera from "../../hooks/useCamera"
+import PaperclipIcon from "../icons/PaperclipIcon"
+import FileIcon from "../icons/FileIcon"
+import LightingIcon from "../icons/LightingIcon"
 
 export default function MenuButton({ onSelectMessage }:{ onSelectMessage:(fastMessage:FastMessageType) => void}){
     const [open, setOpen] = useState(false)
@@ -18,16 +23,18 @@ export default function MenuButton({ onSelectMessage }:{ onSelectMessage:(fastMe
             <div className={`${styles.menuContainer} ${open && styles.visible}`}>
                 <div className={styles.menu}>
                     <MenuFileInputOption 
-                        icon={<CameraIcon/>} 
+                        icon={<FileIcon stroke="#fff" fill="transparent"/>} 
                         title="Imágenes, audios y videos"
                         accept="image/png, image/jpeg, audio/mp3, audio/ogg, audio/opus, video/mp4"
                         onAppendFile={() => setOpen(false)}
                     />
                     <MenuFastMessageInputOption onSelectMessage={onSelectMessage} />
+                    {/* <MicrophoneButton />     */}
+                    <CameraButton />                    
                 </div>
             </div>
             <button type="button" className={styles.button} onClick={() => setOpen(open => !open)}>
-                <XMarkIcon />
+                <PaperclipIcon />
             </button>
         </div>
     )
@@ -71,7 +78,7 @@ function MenuFastMessageInputOption({ onSelectMessage }:{ onSelectMessage:(fastM
     return (
         <>
             <button type="button" className={styles.option} onClick={() => setOpen(true)}>
-                <span className={styles.optionIcon}>🔥</span>
+                <span className={styles.optionIcon}><LightingIcon /></span>
                 <span className={styles.optionTitle}>Mensajes rápidos</span>
             </button>
             <Modal handleClose={() => setOpen(false)} open={open} size="fullWidth">
@@ -96,6 +103,62 @@ function MenuFastMessageInputOption({ onSelectMessage }:{ onSelectMessage:(fastM
                     </label>
                 </ModalFooter>
             </Modal>
+        </>
+    )
+}
+export const MicrophoneButton = () => {
+    const { isRecording, getFile, start, stop} = useAudioRecorder()
+    const appendFile = useMessageMedia(state => state.appendFile)
+    const handleClick = () => {
+        if(isRecording){
+            stop()
+            appendFile(getFile())
+        } else {
+            start()
+        }
+    }
+    return (
+        <button type="button" className={`${styles.option} ${isRecording && styles.recording} `} onClick={handleClick}>
+            <span className={styles.optionIcon}><MicrophoneIcon /></span>
+            <span className={styles.optionTitle}>Micrófono</span>
+        </button>
+    )
+}
+
+const CameraButton = () => {
+    const ref = useRef<HTMLVideoElement>(document.createElement("video"))
+    const appendFile = useMessageMedia(state => state.appendFile)
+    const { start, stop, shot, getFile } = useCamera({ target:ref.current})
+    const [open, setOpen] = useState(false)
+    const handleClick = () => {
+        start()
+        setOpen(!open)
+    }
+    const handleClose = () => {
+        setOpen(false)
+        stop()
+    }
+    const handleShot = () => {
+        shot()
+        appendFile(getFile())
+        stop()
+    }
+
+    return (
+        <>
+            <Modal size="xl" open={open} handleClose={handleClose}>
+                <ModalHeader title={"ScreenShot"} />
+                <ModalBody>
+                    <video className={styles.camContainer} ref={ref}></video>
+                </ModalBody>
+                <ModalFooter>
+                    <ModalAction title="Tomar" onClick={handleShot} />
+                </ModalFooter>
+            </Modal>
+            <button type="button" className={`${styles.option} ${open && styles.recording} `} onClick={handleClick}>
+                <span className={styles.optionIcon}><CameraIcon /></span>
+                <span className={styles.optionTitle}>Cámara</span>
+            </button>
         </>
     )
 }

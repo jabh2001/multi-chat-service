@@ -3,7 +3,7 @@
     height: 100vh;
     display: grid;
     grid-auto-columns: 100%;
-    grid-template-rows: 42px 42px 42px calc(100vh - 126px);
+    grid-template-rows: 70px 50px calc(100vh - 120px);
     > h2 {
         color: #eee;
         padding-left: 10px;

@@ -44,7 +44,7 @@ export default function MessageList({ messages, addMessage, rootRef, observeRef,
         }
     }, [fetchMoreMessage])
     return (
-        <section style={{ width:"100%", display:"flex", flexDirection:"column-reverse"}}>
+        <section className="w-full h-full flex flex-col-reverse">
             {
                 messages.map( (m, i)=>(
                     <ChatMessage 

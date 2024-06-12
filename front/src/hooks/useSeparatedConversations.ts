@@ -6,7 +6,7 @@ import { getAllConversations } from "../service/api"
 import { create } from "zustand"
 import useAuth from "./useAuth"
 import { transitionViewIfSupported } from "../service/general"
-import { useConversationStore } from "./useConversations"
+import { useMessageCount } from "./useMessageCount"
 
 type Store = {
     conversations:ConversationType[]
@@ -14,6 +14,7 @@ type Store = {
     setSearch:(search:string) => void
     setConversation:(conversations:ConversationType[]) => void
     update:(conversationId:number, conversation:Partial<ConversationType>) => void
+    setMessageCountToZero:(conversationId:any) => void
     add:(conversation:ConversationType) => void
     fetch:(obj:{ label?:string, inbox?:string}) => Promise<void>
 }
@@ -30,13 +31,19 @@ export const useInnerConversationStore = create<Store>(set => {
                 })
             )
         },
+        setMessageCountToZero(conversationId){
+            set(
+                state => ({ 
+                    conversations:state.conversations.map(c => c.id === conversationId ? { ...c, messageCount:"0"} : { ...c })
+                })
+            )
+        },
         add(c){
             set(state => ({ conversations:state.conversations.concat(c)}))
         },
         fetch: async ({ label, inbox }) => {
             try {
                 const conversations = await getAllConversations({ label, inbox })
-                console.log('estas son las conversaciones', conversations)
                 set({ conversations:conversations.sort((a, b) => new Date(b.lastMessageDate).getTime() - new Date(a.lastMessageDate).getTime())})
             } catch (e){
                 return Promise.reject(e)
@@ -45,6 +52,7 @@ export const useInnerConversationStore = create<Store>(set => {
     })
 })
 export default function useSeparatedConversations(){
+    const setCount = useMessageCount(store => store.set)
     const search = useInnerConversationStore(store => store.search)
     const allConversations = useInnerConversationStore(store => store.conversations)
     const conversations = useMemo(() => {
@@ -60,7 +68,6 @@ export default function useSeparatedConversations(){
     const [searchParams] = useSearchParams()
 
     const sse = useSSE()
-    const conversation = useConversationStore(state => state.conversation)
 
     const [mine, setMine] = useState(new Set<number>())
     const [unassigned, setUnassigned] = useState(new Set<number>())
@@ -72,6 +79,9 @@ export default function useSeparatedConversations(){
     useEffect(()=>{
         const mineSet = new Set([...mine])
         const unassignedSet = new Set([...unassigned])
+        let allCount = 0
+        let mineCount = 0
+        let unassignedCount = 0
 
         for (const conversation of conversations) {
             const isUnassigned = conversation.assignedUserId === null && conversation.assignedTeamId === null
@@ -91,10 +101,25 @@ export default function useSeparatedConversations(){
             } else if( !isUnassigned && unassignedSet.has(conversation.id)) {
                 unassignedSet.delete(conversation.id)
             }
+            if(conversation.messageCount !== "0" && conversation.messageCount !== 0){
+                allCount++
+                if(isMine){
+                    mineCount++
+                } else if(isUnassigned){
+                    unassignedCount++
+                }
+                // allCount += +conversation.messageCount
+                // if(isMine){
+                //     mineCount += +conversation.messageCount
+                // } else if(isUnassigned){
+                //     unassignedCount += +conversation.messageCount
+                // }
+            }
         }
         transitionViewIfSupported(() => {
             setMine(mineSet)
             setUnassigned(unassignedSet)
+            setCount({ all:allCount, mine:mineCount, unassigned:unassignedCount})
         })
     }, [conversations])
 
@@ -106,11 +131,10 @@ export default function useSeparatedConversations(){
         if (sse) {
             const listener = sse.on("update-conversation-last-message", (data) => {
                 const { conversationId, lastMessage, lastMessageDate } = data
-                const messageCount = conversation?.id === conversationId ? "0" : "!"
-                update(conversationId, {lastMessage, lastMessageDate, messageCount })
+                update(conversationId, {lastMessage, lastMessageDate })
             })
             const updateListener = sse.on("update-conversation", (conversation) => {
-                update(conversation.id, conversation)
+                update(conversation.id, {...conversation})
             })
             const addListener = sse.on("insert-conversation", (conversation) => {
                 add(conversation)

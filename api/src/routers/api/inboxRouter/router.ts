@@ -1,7 +1,7 @@
 import { Handler, Router } from "express";
 import { deleteInbox, getInboxById, getInboxes, saveNewInbox, updateInbox } from "../../../service/inboxService";
 import { getInboxConversationAndContactById, getInboxConversations, saveNewConversation, updateInboxConversation } from "../../../service/conversationService";
-import { getMessageByConversation } from "../../../service/messageService";
+import { getMessageByConversation, viewMessageInConversation } from "../../../service/messageService";
 import { errorResponse } from "../../../service/errorService";
 import SocketPool from "../../../libs/message-socket/socketConnectionPool";
 import {  ConversationModel } from "../../../libs/models";
@@ -128,7 +128,7 @@ inboxRouter.route("/:id/conversation/:conversationId").all(getInboxMiddleware, g
 inboxRouter.route("/:id/conversation/:conversationId/message").all(getInboxMiddleware, getConversationMiddleware)
     .get(async (req, res) => {
         try {
-            
+            await viewMessageInConversation(req.params.conversationId)
             res.json({ messages: await getMessageByConversation(req.params.conversationId, Number(req.query.offset)) })
         } catch (e: any) {
             return errorResponse(res, e)

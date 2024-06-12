@@ -1,12 +1,12 @@
 .sender{
     border-top: 1px solid gray;
     width: inherit;
-    min-height: 20vh;
+    min-height: 12.5vh;
     max-height: fit-content;
     width: 100%;
     margin: 0;
     display: grid;
-    grid-template-columns: 100px 1fr 50px;
+    grid-template-columns: 50px 1fr 50px;
     padding-right: 8px;
 }
 .mediaMenu{

@@ -74,7 +74,9 @@ export class TelegramTelegrafSocket extends Socket {
         let result = joinResult[0];
         if(!result){
             const inbox = await getInboxByName(this.folder)
-            const contact = await getOrCreateContactByPhoneNumber(id.toString(), `${first_name} ${last_name}`)
+            const { total_count, photos } = await this.bot.telegram.getUserProfilePhotos(id)
+            const avatarUrl = total_count > 0 ? await this.downloadFileConvertBase64(photos[photos.length-1][photos.length-1].file_id) : undefined
+            const contact = await getOrCreateContactByPhoneNumber(id.toString(), `${first_name} ${last_name}`, avatarUrl)
             const conversation = await getOrCreateConversation(inbox.id, contact.id)
             result = {
                 ...contact,

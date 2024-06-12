@@ -1,26 +1,33 @@
 import styles from './inboxDiv.module.css'
-import { Tabs, Tab } from "../Tab";
 import { SearchInbox } from "../searchInbox/searchInbox.tsx";
-import ChatsDiv from '../ChatsDiv/index.tsx';
-import { useState } from 'react';
-import useAuth from '../../hooks/useAuth.ts';
+import { ChatAll, ChatMine, ChatUnassigned } from '../ChatsDiv/index.tsx';
+import { useMessageCount } from '../../hooks/useMessageCount';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs.tsx';
+import useSeparatedConversations from '../../hooks/useSeparatedConversations.ts';
 
 export const InboxDive: React.FC = () => {
-
-    const user = useAuth(state => state.user)
-    const [tab, setTab] = useState(1)
+    const { conversations, mineConversation, unassignedConversation } = useSeparatedConversations()
+    const { all, mine, unassigned} = useMessageCount()
     return (
-        <div className={styles.contenedorConversation}>
+        <Tabs defaultValue='mine' className={styles.contenedorConversation} onKeyDown={() => console.log(conversations)}>
             <SearchInbox ></SearchInbox>
-            <h2>Conversations</h2>
-            <div>
-                <Tabs value={tab} setValue={setTab}>
-                    <Tab name="mine" value={1} notifications={4} />
-                    <Tab name="unassigned" value={2} notifications={0} />
-                    { user?.role == "admin" && <Tab name="all" value={3} notifications={4} /> }
-                </Tabs>
-            </div>
-            <ChatsDiv tab={tab} />
-        </div>
+            <TabsList>
+                <TabsTrigger value="mine">Mías {isValid(mine) && ` - ${mine}`}</TabsTrigger>
+                <TabsTrigger value="unassigned">No asignadas {isValid(unassigned) && ` - ${unassigned}`}</TabsTrigger>
+                <TabsTrigger value="all">Todas {isValid(all) && ` - ${all}`}</TabsTrigger>
+            </TabsList>
+            <TabsContent value='mine'>
+                <ChatMine conversations={mineConversation} />
+            </TabsContent>
+            <TabsContent value='unassigned'>
+                <ChatUnassigned conversations={unassignedConversation} />
+            </TabsContent>
+            <TabsContent value='all'>
+                <ChatAll conversations={conversations} />
+            </TabsContent>
+            {/* <ChatsDiv tab={tab} /> */}
+        </Tabs>
     );
 }
+
+const isValid = (data:number | string) => data !== 0 && data !== "0"

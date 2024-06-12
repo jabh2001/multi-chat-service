@@ -1,6 +1,6 @@
 import { AgentType, WSMessageUpsertType } from '../../types'
 import { ContactType, FastMediaMessageType, MessageType } from '../schemas'
-import { saveNewMessageInConversation } from '../../service/messageService'
+import { saveNewMessageInConversation, viewMessageInConversation } from '../../service/messageService'
 import { Socket } from './sockets/socket'
 import { getFastMessageById } from '../../service/fastMessageService'
 export default class WS {
@@ -22,6 +22,7 @@ export default class WS {
             messageType: data.fromMe === true ? 'outgoing' : 'incoming',
             private: true,
             buffer: buffer,
+            status:false
         }
         const result = await saveNewMessageInConversation(data.conversation.id, message)
         return JSON.stringify(result)
@@ -44,6 +45,7 @@ export default class WS {
             messageType: "outgoing",
             whatsappId: messageID,
             buffer: buffer,
+            status:true
         }
         const result = await saveNewMessageInConversation(conversationId, message)
         return JSON.stringify(result)
@@ -62,7 +64,9 @@ export default class WS {
             private: true,
             messageType: "outgoing",
             buffer: data.base64Buffer,
+            status:true
         }
+        await viewMessageInConversation(conversationId)
         if(data.listBufferBase64 || data.fastMessage){
             let list: MediaMessageListType
             const returnedList: any[] = []

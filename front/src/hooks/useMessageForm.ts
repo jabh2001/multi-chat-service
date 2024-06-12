@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useWebSocket } from "../components/chatContainer";
 import useMessageMedia from "./useMessageMedia";
 import { useConversationStore } from "./useConversations";
 import useAuth from "./useAuth";
 import { convertFileToBase64 } from "../service/file";
+import { useWebSocket } from "../components/chat";
 
 const useMessageForm =  () => {
     const [ message, setMessage ] = useState("")
@@ -37,9 +37,11 @@ const useMessageForm =  () => {
         }
 
         if (ws && ws.readyState === WebSocket.OPEN) {
+            console.log(1)
             ws.send(JSON.stringify(datosEnviar));
             setMessage("")
             reset()
+            console.log(12)
         }
     };
 

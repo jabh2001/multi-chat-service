@@ -1,22 +1,25 @@
 import { MenuItem, MenuSection } from "../menu"
-import { HomeIcon, PhoneIcon } from "../icons"
+import { HomeIcon } from "../icons"
 import { useLabel } from "../../hooks/useLabelStore"
 import useInboxStore from "../../hooks/useInboxStore"
 import { useEffect } from "react"
+import EntradasIcon from "../icons/EntradasIcon"
+import LabelIcon from "../icons/LabelIcon"
+import { GroupMenuItem } from "./Sidebar/items"
 
 export function LabelSection({ basePath }:{ basePath:string }){
     const {labels} = useLabel()
     return (
-        <MenuSection title="Etiquetas">
+        <>
             {
                 labels.map((el) => {
                     return(
-                        <MenuItem key={`label_${el.id}`} icon={<PhoneIcon />} title={el.name} to={`${basePath}?label=${el.id}`} />
+                        <GroupMenuItem key={`label_${el.id}`} title={el.name} to={`${basePath}?label=${el.id}`} />
                     )
                 })
             }
-            <MenuItem icon={<HomeIcon />} title="Añadir" to="/config/labels" />
-        </MenuSection>
+            <GroupMenuItem title="Añadir" to="/config/labels" />
+        </>
     )
 }
 export function InboxSection({ basePath }:{ basePath:string }){
@@ -26,15 +29,15 @@ export function InboxSection({ basePath }:{ basePath:string }){
         fetchInboxes()
     }, [])
     return (
-        <MenuSection title="Entradas">
+        <>
             {
                 inboxes.map((el) => {
                     return(
-                        <MenuItem key={`inbox_${el.id}`} icon={<PhoneIcon />} title={el.name} to={`${basePath}?inbox=${el.id}`} />
+                        el.id && <GroupMenuItem key={`inbox_${el.id}`} title={el.name} to={`${basePath}?inbox=${el.id}`} />
                     )
                 })
             }
-            <MenuItem icon={<HomeIcon />} title="Añadir" to="/config/inboxes/new" />
-        </MenuSection>
+            <GroupMenuItem title="Añadir" to="/config/inboxes/new" />
+        </>
     )
 }
