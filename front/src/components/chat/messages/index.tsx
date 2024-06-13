@@ -35,7 +35,6 @@ export default function Messages({ messages, addMessage, observeRef, rootRef, fe
     }, [messages])
     useEffect(()=>{
         const onScroll = () =>{
-            console.log({ ws})
             observeRef.current && isInViewport(observeRef.current) && !isLoading && fetchMoreMessage && fetchMoreMessage()
         }
         rootRef.current?.addEventListener("scrollend", onScroll)

@@ -45,7 +45,6 @@ export default function LabelForm({ edited, resetEdited }:{ edited:LabelType | u
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <AgentProtection >
                 <div>
-                    <h3 className={styles.title}>Crea una nueva etiqueta</h3>
                     <p className={styles.description}> 
                         puedes crear etiqueta para poder gestionar y agrupar los contactos que tengas almacenados en el sistema 
                         y así poder buscarlos de una mejor forma o calificarlo del modo en el que quieras por ejemplo un cliente que esté interesado en un tipo de 

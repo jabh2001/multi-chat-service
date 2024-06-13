@@ -73,7 +73,12 @@ export class WhatsAppBaileysSocket extends Socket {
         }
     }
     async logout() {
-        await this.sock.logout()
+        try {
+
+            await this.sock.logout()
+        } catch (e){
+
+        }
         const carpetaSesion = path.join(BAILEYS_SESSION_FOLDER, this.folder);
 
         // Verificar si la carpeta existe
@@ -93,6 +98,7 @@ export class WhatsAppBaileysSocket extends Socket {
                 }
             });
         }
+        await this.start()
     }
     async getBase64Buffer(m:proto.IWebMessageInfo):Promise<null | Base64Buffer> {
         if(!m.message){

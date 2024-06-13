@@ -1,4 +1,8 @@
+import ChatVideoPlayer from "../../../../components/VideoPlayer/VidePlayer"
 import { MessageType } from "../../../../types"
+import AudioMessage from "../audio-message"
+import DocumentMessage from "../document-message"
+import ImageMessage from "../image-message"
 
 type Props =  MessageType & {
     position:"top" | "center" | "bottom"
@@ -14,23 +18,41 @@ const outgoingMessageTypeMap:{ [key:string] : string} = {
     bottom:"rounded-b-2xl rounded-s-2xl"
 }
 
-export default function Message({ content, messageType, private:isPrivate, position}:Props){
+export default function Message({ content, buffer, contentType, messageType, private:isPrivate, position}:Props){
 
     return (
         <div className={`flex items-center group ${messageType === "outgoing" ? "flex-row-reverse":""}`}>
-            <p 
+            <div 
                 className={`
-                    px-6 py-3 max-w-xs lg:max-w-md text-gray-200
+                    p-2 max-w-xs lg:max-w-md text-gray-200
                     ${messageType === "incoming" ? "bg-gray-800": isPrivate ? "bg-emerald-600" : "bg-blue-600"}
                     ${messageType === "incoming" ? incomingMessageTypeMap[position] :  outgoingMessageTypeMap[position] }
                 `}>
-                {content}
-            </p>
+                
+                {/* { message.user?.name && <p className={styles.messageUsername}><span className={styles.whiteText}>{`${message.user.name}`}</span></p> } */}
+
+                {buffer && contentType === 'imageMessage' && (
+                    <>
+                        <p>{content}</p>
+                        <ImageMessage src={`data:image/jpeg;base64,${buffer}`} alt="Message Image" />
+                    </>
+                )}
+                {buffer && contentType === 'audioMessage' && (
+                    <AudioMessage src={`data:audio/ogg;base64,${buffer}`}  />
+                )}
+                {buffer && contentType === 'videoMessage' && (
+                    <ChatVideoPlayer src={`data:video/mp4;base64,${buffer}`} /> 
+                )}
+                {buffer && contentType === 'documentMessage' && (
+                    <DocumentMessage content={content} buffer={buffer} /> 
+                )}
+                {contentType == "text" && content !== 'undefined' && <p>{content}</p>}
+            </div>
             {/* <MessageButtons /> */}
         </div>
     )
 }
-function MessageButtons(){
+export function MessageButtons(){
     return (
         <>
             <button type="button" className="hidden group-hover:block flex-shrink-0 focus:outline-none mx-2 rounded-full text-gray-500 hover:text-gray-900 hover:bg-gray-700 bg-gray-800 w-8 h-8 p-2">

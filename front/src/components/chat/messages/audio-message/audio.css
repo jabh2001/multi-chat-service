@@ -1,0 +1,10 @@
+.rhap_horizontal-reverse .rhap_controls-section{
+    margin-right: 4px;
+}
+.rhap_controls-section{
+    flex:0
+}
+.iconify{
+    width: 100%;
+    color: #fff;
+}

@@ -14,6 +14,15 @@
   --active-button-success-color:#64ca52;
   --active-button-error-color:#e43c3c;
   --active-button-warning-color:#ecb051;
+
+}
+.dark{
+  --primary:213, 66%, 63%;
+  --secondary:213, 14%, 42%;
+  --success:111, 53%, 56%;
+  --error:0, 76%, 56%;
+  --warning:37, 80%, 62%;
+
 }
 body {
   position: relative;
@@ -67,43 +76,34 @@ svg{
   }
 }
 .btn{
-  --color:#333
-  white-space: nowrap;
-  padding: 12px 4px;
-  font-weight: bold;
-  background-color: #f8f8f8;
-  border: 2px solid var(--color);
-  color: var(--color);
-  cursor: pointer;
-  --shadow: var(--color);
-  user-select: none;
-  &:hover{
-    box-shadow: 0px 0px 5px .75px var(--shadow);
-    text-shadow: 0px 0px 5px .75px var(--shadow);
+  @apply inline-flex items-center justify-center gap-2 bg-blue-500 text-center font-medium text-white hover:bg-opacity-90 py-4 px-8 rounded-xl;
+
+  > svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
   }
-  &.icon{
-    width: 32px;
-    padding: 4px;
-    fill: var(--color);
-    > svg {
-      width: 100%;
-    }
-  }
+}
+.btn.sm{
+  @apply py-2 px-4;
+}
+.btn.xl{
+  @apply py-8 px-12;
 }
 .btn.primary{
-  --color:var(--active-button-primary-color);
+  @apply bg-blue-500;
 }
 .btn.secondary{
-  --color:var(--active-button-secondary-color);
+  @apply bg-gray-500;
 }
 .btn.success{
-  --color:var(--active-button-success-color);
+  @apply bg-emerald-600;
 }
 .btn.error{
-  --color:var(--active-button-error-color);
+  @apply bg-red-600;
 }
 .btn.warning{
-  --color:var(--active-button-warning-color);
+  @apply bg-amber-400;
 }
 .input{
     display: flex;

@@ -1,10 +1,11 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import Logo from '../../../assets/chat.svg';
 import { CommentIcon, ConfigIcon, PhoneIcon } from '../../../components/icons';
 import { GroupMenuItem, NavGroupHeader } from './items';
 import RightFromBracket from '../../../components/icons/RightFromBracket';
+import useAuth from '../../../hooks/useAuth';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -12,6 +13,9 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+  const signOut = useAuth(store => store.signOut)
+  const user = useAuth(store => store.user)
+  const navigate = useNavigate()
   const location = useLocation();
   const { pathname } = location;
 
@@ -22,7 +26,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [sidebarExpanded, setSidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
   );
-
+  useEffect(()=>{
+    if(user === null){
+        navigate("/login")
+    }
+  }, [user])
   // close on click outside
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
@@ -126,7 +134,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                 }}
               </SidebarLinkGroup>
               
-              <MenuItem to='/phone' text='Cerrar sesión' icon={<RightFromBracket />} />
+              <ButtonMenuItem onClick={signOut} text='Cerrar sesión' icon={<RightFromBracket />} />
             </ul>
           </div>
         </nav>
@@ -154,6 +162,23 @@ const MenuItem:FC<{ to:string, icon:JSX.Element, text:string }> = ({ to, text, i
         </div>
         {text}
       </NavLink>
+    </li>
+  )
+}
+
+const ButtonMenuItem:FC<{ onClick?:()=>void, icon:JSX.Element, text:string }> = ({ onClick, text, icon }) => {
+  return (
+    <li>
+      <button
+        onClick={onClick}
+        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium duration-300 ease-in-out hover:bg-slate-700 dark:hover:bg-meta-4`}
+
+      >
+        <div className='fill-current'>
+          {icon}
+        </div>
+        {text}
+      </button>
     </li>
   )
 }

@@ -1,16 +1,17 @@
 import { type RouteObject } from "react-router-dom";
 import { useAgent } from "../../../hooks/useAgent";
-import styles from './index.module.css';
 import AgentForm from "../../../components/form/AgentForm";
-import SearchBar from "../../../components/SearchBar";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AgentType, TeamType } from "../../../types";
-import { ReactTabulator, reactFormatter } from "react-tabulator";
-import { ActionButtons } from "../../../components/TableData/ActionButtons";
 import Drawer from "../../../components/Drawer";
 import AgentTeamForm from "../../../components/form/AgentTeamForm";
 import { getAgentTeam } from "../../../service/api";
-import useTabulatorFilters from "../../../hooks/useTabulatorFilters";
+import HeaderSearchBar from "../../../components/HeaderSearchBar";
+import PencilIcon from "../../../components/icons/PencilIcon";
+import TrashIcon from "../../../components/icons/TrashIcon";
+import LabelIcon from "../../../components/icons/LabelIcon";
+import { ProfileIcon } from "../../../components/icons";
+import { useDebounce } from "../../../hooks/useDebounce";
 
 const baseName = "/config/agents"
 
@@ -23,12 +24,17 @@ const agentsRoutes : RouteObject[] = [
 
 ];
 function IndexPage(){
-    const { onRef, clearFilters, include } = useTabulatorFilters()
     const [ filter, setFilter ] = useState("")
-    const [openDrawer, setOpenDrawer] = useState(false)
+    const debounceFilter = useDebounce(filter)
+    const [ openDrawer, setOpenDrawer] = useState(false)
     const [ agent, setAgent ] = useState<AgentType | undefined>()
     const [ teams, setTeams ] = useState<TeamType[]>([])
-    const { agents, deleteAgent } = useAgent()
+    const { agents:rawAgents, deleteAgent } = useAgent()
+
+    const agents = useMemo(() => rawAgents.filter(agent => {
+        return agent.name.toLowerCase().includes(filter.toLowerCase()) ||  agent.email.toLowerCase().includes(filter.toLowerCase())
+    } ), [debounceFilter, rawAgents])
+
     const [edited, setEdited] = useState<AgentType | undefined>(undefined)
 
     useEffect(()=>{
@@ -40,44 +46,99 @@ function IndexPage(){
         }
         getDate()
     }, [agent])
+    
 
     const handleEdit = (row:AgentType) => setEdited(row)
     const handleDelete = ({ id }:AgentType) => deleteAgent(id)
-    const handleFilter = ()=>{
-        filter == "" ? clearFilters() : include("name", filter)
-    }
-    const removeFilters = ()=>{
-        clearFilters()
-        setFilter("")
-    }
     return (
-        <div className={styles.container}>
-            <div className={styles.searchBar}>
-                <h3>Agent</h3>
-                <SearchBar   placeholder="Search agent..."  value={filter} onChange={setFilter} onSearch={handleFilter} onRemove={removeFilters} />
-                <button className="btn secondary" onClick={handleFilter}>Filtrar</button>
+        <div className="grid grid-cols-4 bg-gray-200 h-screen">
+            <div className="col-span-3">
+                <HeaderSearchBar placeholder="Search agents" value={filter} onChange={setFilter} onRemove={()=>setFilter("")} />
+                <div>
+                    <div className="flex justify-center pt-8">
+                        <div className="rounded-xl border border-slate-300 bg-white shadow-default w-[90%]">
+                            <div className="py-6 px-4 md:px-6 xl:px-6  border-b border-slate-300">
+                                <h4 className="text-xl font-semibold text-black">
+                                    Lista de agentes
+                                </h4>
+                            </div>
+
+                            <div className="grid grid-cols-6 border-b border-slate-300 py-4 px-4  md:px-6 2xl:px-6 text-gray-500 bg-gray-100/25">
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Nombre</p>
+                                </div>
+                                <div className="col-span-1 hidden items-center sm:flex">
+                                    <p className="font-medium">Correo</p>
+                                </div>
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Tipo</p>
+                                </div>
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Etiquetas</p>
+                                </div>
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Editar</p>
+                                </div>
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Eliminar</p>
+                                </div>
+                            </div>
+                            <div className="max-h-[65vh] overflow-y-scroll">
+                                {agents.map((agent) => (
+                                    <div
+                                        className="grid grid-cols-6 border-b border-slate-300 py-4 px-4 md:px-6 2xl:px-6"
+                                        key={"contact_" + agent.id}
+                                    >
+                                        <div className="col-span-1 items-center flex">
+                                            <p className="text-sm text-black">
+                                                {agent.name}
+                                            </p>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <p className="text-sm text-black">
+                                                {agent.email}
+                                            </p>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <p className="text-sm text-black">
+                                                {agent.role}
+                                            </p>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <button className="btn primary" onClick={() => {
+                                                setOpenDrawer(true)
+                                                setAgent(agent)
+                                            }}>
+                                                <LabelIcon />
+                                            </button>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <button className="btn warning" onClick={() => handleEdit(agent)}>
+                                                <PencilIcon />
+                                            </button>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <button className="btn error" onClick={() => handleDelete(agent)}>
+                                                <TrashIcon />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div> 
             </div>
-            <div className={styles.agentsContainer}>
-                <ReactTabulator
-                    onRef={onRef}
-                    options={{
-                        layout:"fitColumns"
-                    }}
-                    columns={[
-                        {title:"V", width:36, cellClick:(_e, cell) => {
-                            setOpenDrawer(true)
-                            setAgent(cell.getData() as any)
-                        }},
-                        {field:"name", title:"Nombre", widthGrow:2 },
-                        {field:"email", title:"Correo",  widthGrow:3},
-                        {field:"role", title:"Tipo", widthGrow:1 },
-                        {title:"actions", formatter:reactFormatter(<ActionButtons onEdit={handleEdit} onDelete={handleDelete} />) }
-                    ]}
-                    data={agents}
-                />
-            </div>  
-            <div className={styles.explain}>
-                <AgentForm edited={edited} resetEdited={()=>setEdited(undefined)} />
+            <div className="bg-white border-gray-200 p-4 border-l-2">
+                <div className="flex justify-start items-center gap-4 text-primary fill-primary text-xl font-bold ">
+                    <div>
+                        <ProfileIcon />
+                    </div>
+                    <h3>Nuevo agente</h3>
+                </div>
+                <div>
+                    <AgentForm edited={edited} resetEdited={()=>setEdited(undefined)} />
+                </div>
             </div>
             <Drawer open={openDrawer && !!agent} onClose={ ()=>setOpenDrawer(false)}>
                 <div>
