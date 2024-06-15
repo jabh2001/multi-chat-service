@@ -45,7 +45,6 @@ export default function TeamForm({ edited, resetEdited }:{ edited:TeamType | und
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
             <AgentProtection >
             <div>
-                <h3 className={styles.title}>Crea un nuevo equipo</h3>
                 <p className={styles.description}>
                     los equipos de trabajo sirven para agrupar a tus agentes con un mismo propósito o misión y poder gestionar actividades de una 
                     forma más cómoda sobre todo a la hora de asignar un chat que podrías asignar a varias personas que cumplan la misma misión

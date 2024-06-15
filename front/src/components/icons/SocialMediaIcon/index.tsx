@@ -9,16 +9,17 @@ import { SocialMediaType } from "../../../types"
 
 type Props = {
     socialMedia: SocialMediaType["name"]
+    className?:string
 }
-export default function SocialMediaIcon({ socialMedia }:Props){
+export default function SocialMediaIcon({ socialMedia, className }:Props){
     switch(socialMedia){
-        case "facebook":  return <FaceBookIcon />;
-        case "gmail":     return <GmailIcon />;
-        case "instagram": return <InstagramIcon />;
-        case "whatsapp":  return <WhatsAppIcon />;
-        case "telegram":  return <TelegramIcon />;
-        case "linkedin":  return <LinkedInIcon />;
-        case "threads":   return <ThreadsIcon />;
+        case "facebook":  return <FaceBookIcon className={className} />;
+        case "gmail":     return <GmailIcon className={className} />;
+        case "instagram": return <InstagramIcon className={className} />;
+        case "whatsapp":  return <WhatsAppIcon className={className} />;
+        case "telegram":  return <TelegramIcon className={className} />;
+        case "linkedin":  return <LinkedInIcon className={className} />;
+        case "threads":   return <ThreadsIcon className={className} />;
         default: return null
     }
 }

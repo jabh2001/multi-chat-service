@@ -292,7 +292,7 @@ export async function getInboxes() {
     }
 }
 
-export async function postInbox({ name, channelType, token:telegramToken}: { name: string, channelType: string, token?:string }) {
+export async function postInbox({ name, channelType, telegramToken}: { name: string, channelType: string, telegramToken?:string }) {
     try {
         const { data } = await instance.post<{ inbox: InboxType }>("/inbox", { name, channelType, telegramToken })
         return data.inbox

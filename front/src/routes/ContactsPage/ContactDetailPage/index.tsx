@@ -1,38 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ContactType, LabelType } from "../../../types";
-import { getContactById, getContactLabel, getSocialMedia, sendMessageToContact } from "../../../service/api";
+import { ContactType } from "../../../types";
+import { getContactById, getContactLabel, getSocialMedia } from "../../../service/api";
 import PrevPageButton from "../../../components/button/PrevPageButton";
-import { TabsSlider, Tab } from "../../../components/TabsSlider";
 import ContactEditForm from "../../../components/form/ContactForm";
 import SocialMediaForm from "../../../components/form/SocialMediaForm";
-import ContactLabelForm from "../../../components/form/ContactLabelForm";
 import ContactCard from "../../../components/cards/ContactCard";
 import { useSSE } from "../../../hooks/useSSE";
-import Snackbar from "../../../components/Snackbar";
-import styles from "./index.module.css"
-import { Modal, ModalAction, ModalBody, ModalFooter, ModalHeader } from "../../../components/Modal";
-import useInboxStore from "../../../hooks/useInboxStore";
-import Select from "../../../components/form/inputs/Select";
-import Option from "../../../components/form/inputs/Option";
-import { useForm } from "react-hook-form";
-import Textarea from "../../../components/form/inputs/Textarea";
+import SocialMediaIcon from "../../../components/icons/SocialMediaIcon";
 
 export default function ContactDetailPage(){
     const listener = useSSE()
-    const [ toast, setToast ] = useState({ msg:"", open:false})
-    const [ page, setPage ] = useState(1)
+    const [ _toast, setToast ] = useState({ msg:"", open:false})
     const { contactId } = useParams() as { contactId:string};
     const [contactInfo, setContactInfo] = useState<ContactType>()
 
     const openToast = (msg:string) => setToast({ msg, open:true})
-    const closeToast = () => setToast({ msg:"", open:false})
+    // const _closeToast = () => setToast({ msg:"", open:false})
 
     useEffect(()=>{
         if(listener){
             const list = listener.on("update-contact", ({ id, avatarUrl, ...contact}) => {
                 if (id === Number(contactId)){
-                    setContactInfo(c => ({...c, ...contact as any, avatarUrl:`data:image/png;base64,${avatarUrl}`}))
+                    setContactInfo(c => ({...c, ...contact as any, avatarUrl: avatarUrl ? `data:image/png;base64,${avatarUrl}` : c?.avatarUrl}))
                 }
             })
             return ()=> { 
@@ -62,132 +52,94 @@ export default function ContactDetailPage(){
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.head}>
-                <PrevPageButton title="Contacts" />
-            </div>
-            <div className={styles.contactInfo}>
-                <ContactCard contact={contactInfo} />
-                <div className={styles.changeTabsButton}>
-                    <SendMessageFormModal contact={contactInfo} />
-                    <button onClick={() => setPage(1)}><span>Edit Data</span><span>&gt;</span></button>
-                    <button onClick={() => setPage(2)}><span>Set Social Media</span><span>&gt;</span></button>
-                    <button onClick={() => setPage(3)}><span>Set Labels </span><span>&gt;</span></button>
+        <div className="grid grid-cols-4 bg-gray-200 h-screen overflow-y-scroll ">
+            <div className="col-span-3 flex flex-col">
+                <div className="h-16 bg-white border-b-2 border-gray-400 flex items-center px-4">
+                    
+                    <div>
+                        <PrevPageButton title="Contacts" />
+                    </div>
+                </div>
+                <div className="mt-16 px-8 grid grid-cols-3 gap-4 flex-1items-stretch pb-8">
+                    <div className="col-start-1 flex flex-col gap-8">
+                        <div>
+                            <div className="bg-white rounded-t-3xl">
+                                <h3 className="border-b-2 border-gray-200 text-gray-700 text-3xl text-center py-2">Editar datos</h3>
+                                <div className="px-3 pb-4">
+
+                                    <ContactEditForm edited={contactInfo} onEdit={()=>openToast("Se ha actualizado el contacto")} />
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div className="bg-white rounded-t-3xl">
+                                <h3 className="border-b-2 border-gray-200 text-gray-700 text-3xl text-center py-2">Añadir red social</h3>
+                                <div className="px-3 pb-4">
+                                    <SocialMediaForm onAdd={(newSocialMedia) => {
+                                        setContactInfo(old => {
+                                            return old ? {...old, socialMedia: [...old.socialMedia, newSocialMedia]} : undefined;
+                                        })
+                                        openToast("Se ha añadido la nueva red social")
+                                    }}/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div className="col-span-2">
+                        <div className="flex justify-center">
+                            <div className="rounded-xl border border-slate-300 bg-white shadow-default w-[90%]">
+                                <div className="py-6 px-4 md:px-6 xl:px-6  border-b border-slate-300">
+                                    <h4 className="text-xl font-semibold text-black">
+                                        Redes sociales de {contactInfo.name}
+                                    </h4>
+                                </div>
+
+                                <div className="grid grid-cols-3 border-b border-slate-300 py-4 px-4  md:px-6 2xl:px-6 text-gray-500 bg-gray-100/25">
+                                    <div className="col-span-1 flex items-center">
+                                        <p className="font-medium">Medio</p>
+                                    </div>
+                                    <div className="col-span-1 hidden items-center sm:flex">
+                                        <p className="font-medium">nombre</p>
+                                    </div>
+                                    <div className="col-span-1 flex items-center">
+                                        <p className="font-medium">ir</p>
+                                    </div>
+                                </div>
+                                <div className="max-h-[65vh] overflow-y-scroll">
+                                    {contactInfo.socialMedia.map(({ id, displayText, name, url }) => (
+                                        <div
+                                            className="grid grid-cols-3 border-b border-slate-300 py-4 px-4 md:px-6 2xl:px-6"
+                                            key={"fastMediaMessage" + id}
+                                        >
+                                            <div className="col-span-1 items-center flex gap-2">
+                                                <SocialMediaIcon socialMedia={name} />
+                                                <p className="text-sm text-black">
+                                                    {name}
+                                                </p>
+                                            </div>
+                                            <div className="col-span-1 items-center flex">
+                                                <p className="text-sm text-black">
+                                                    {displayText}
+                                                </p>
+                                            </div>
+                                            <div className="col-span-1 items-center flex">
+                                                <a href={url} target="_blank" className="btn primary link">
+                                                    Ver perfil
+                                                </a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div className={styles.tabs}>
-                <TabsSlider page={page}>
-                    <Tab visible={page == 1}>
-                        <div className={styles.editContactForm}>
-                            <ContactEditForm edited={contactInfo} onEdit={()=>openToast("Se ha actualizado el contacto")} />
-                            <form className={styles.noteForm}>
-                                <h4>Nota</h4>
-                            </form>
-                        </div>
-                    </Tab>
-                    <Tab visible={page == 2}>
-                        <div className={styles.SocialMediaFormContainer}>
-                            {
-                                contactInfo.socialMedia?.map(sm => (
-                                    <SocialMediaForm
-                                        key={`social_media_${sm.id}`}
-                                        edited={sm}
-                                        onEdit={(newSocialMedia) => {
-                                            setContactInfo(old => {
-                                                return old ? {...old, socialMedia: old.socialMedia.map(sm => sm.id === newSocialMedia.id ? newSocialMedia : sm)} : undefined;
-                                            })
-                                            openToast("Se ha actualizado la red social")
-                                        }}
-                                    />
-                                ))
-                            }
-                            
-                            <SocialMediaForm onAdd={(newSocialMedia) => {
-                                setContactInfo(old => {
-                                    return old ? {...old, socialMedia: [...old.socialMedia, newSocialMedia]} : undefined;
-                                })
-                                openToast("Se ha añadido la nueva red social")
-                            }}/>
-                        </div>
-                    </Tab>
-                    <Tab visible={page == 3}>
-                        <ContactLabelForm 
-                            contactId={contactId} 
-                            name={contactInfo.name} 
-                            labels={contactInfo.labels} 
-                            setLabels={(labels:LabelType[]) => {setContactInfo(({...contactInfo, labels}));openToast("Se han actualizado las etiquetas")}}
-                        />
-                    </Tab>
-                </TabsSlider>
+            <div className="border-gray-200 border-l-2 relative">
+                <ContactCard contact={contactInfo} setContactInfo={setContactInfo} />
+
             </div>
-            <Snackbar color="warning" open={toast.open} handleClose={closeToast} >
-                { toast.msg || "Se ha actualizado"}
-            </Snackbar>
         </div>
     )
-}
-type Inputs = {
-    inboxName:string
-    message:string
-}
-function SendMessageFormModal({ contact }:{ contact:ContactType}){
-    const inboxes = useInboxStore(store => store.inboxes)
-    const fetchInbox = useInboxStore(store => store.fetch)
-    const [ open, setOpen ] = useState(false)
-    const [ openSnackbar, setOpenSnackbar] = useState({ status:false, msg:"" })
-    const { control, handleSubmit, reset } = useForm<Inputs>()
-    const buttonRef = useRef<HTMLButtonElement>(null)
-
-    useEffect(()=>{
-        inboxes.length == 0 && fetchInbox()
-    }, [inboxes])
-
-    const cancel = ()=>{
-        setOpen(false)
-        reset()
-    }
-    const send = async ({ inboxName, message }:Inputs) => {
-        try{
-            await sendMessageToContact(contact.id, inboxName, message)
-            setOpen(false)
-            reset()
-            setOpenSnackbar({ status:true, msg:"Mensaje Enviado" })
-        } catch(e){
-            setOpenSnackbar({ status:true, msg:"Ha habido un error" })
-        }
-    }
-    return (<>
-        <button onClick={()=>setOpen(true)}><span>Enviar mensaje</span><span>&gt;</span></button>
-        <Modal open={open} handleClose={() => setOpen(false)} size="lg" >
-            <ModalHeader title={`Envíale un mensaje a ${contact.name}`} />
-            <ModalBody>
-                <form onSubmit={handleSubmit(send)}>
-                    <Select control={control} label="Nombre del inbox" name="inboxName" >
-                        {
-                            inboxes.map(inbox => (
-                                <Option 
-                                    key={`inbox_option_${inbox.id}`} 
-                                    value={inbox.name} 
-                                    label={inbox.name?.toUpperCase()}
-                                />
-                            ))
-                        }
-                    </Select>
-                    <Textarea 
-                        name="message"
-                        control={control}
-                        label="Mensaje"
-                    />
-                    <button style={{ display:"none" }} ref={buttonRef}>Enviar</button>
-                </form>
-            </ModalBody>
-            <ModalFooter>
-                <ModalAction title='Enviar' onClick={()=>buttonRef.current?.click()}/>
-                <ModalAction title='Cancelar' onClick={cancel} />
-            </ModalFooter>
-        </Modal>
-        <Snackbar open={openSnackbar.status} handleClose={()=>setOpenSnackbar({ status:false, msg:""})}>
-            Mensaje enviado
-        </Snackbar>
-    </>)
 }

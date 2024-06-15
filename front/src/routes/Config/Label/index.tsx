@@ -8,6 +8,7 @@ import PencilIcon from "../../../components/icons/PencilIcon";
 import TrashIcon from "../../../components/icons/TrashIcon";
 import LabelIcon from "../../../components/icons/LabelIcon";
 import { LabelType } from "../../../types";
+import ConfirmTooltip from "../../../components/confirm-tooltip";
 
 const baseName = "/config/labels"
 
@@ -38,7 +39,7 @@ function IndexPage(){
     return (
         <div className="grid grid-cols-4 bg-gray-200 h-screen">
             <div className="col-span-3">
-                <HeaderSearchBar placeholder="Search agents" value={filter} onChange={setFilter} onRemove={()=>setFilter("")} />
+                <HeaderSearchBar placeholder="Search labels" value={filter} onChange={setFilter} onRemove={()=>setFilter("")} />
                 <div>
                     <div className="flex justify-center pt-8">
                         <div className="rounded-xl border border-slate-300 bg-white shadow-default w-[90%]">
@@ -81,9 +82,11 @@ function IndexPage(){
                                             </button>
                                         </div>
                                         <div className="col-span-1 items-center flex">
-                                            <button className="btn error" onClick={() => handleDelete(label)}>
-                                                <TrashIcon />
-                                            </button>
+                                            <ConfirmTooltip onConfirm={() => handleDelete(label)}>
+                                                <button className="btn error">
+                                                    <TrashIcon />
+                                                </button>
+                                            </ConfirmTooltip>
                                         </div>
                                     </div>
                                 ))}

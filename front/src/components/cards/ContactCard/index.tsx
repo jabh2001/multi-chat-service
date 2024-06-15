@@ -1,51 +1,90 @@
-import CircleAvatar from "../../../components/avatar/CircleAvatar";
+import { useRef } from "react";
+import Popup from "reactjs-popup";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import SocialMediaDisplay from "../../../components/SocialMediaDisplay";
-import { ContactType } from "../../../types";
-import { Link } from "react-router-dom";
-import { buttonVariants } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { PhoneIcon } from "../../../components/icons";
-import GmailIcon from "../../../components/icons/SocialMediaIcon/GmailIcon";
+import ContactLabelForm from "../../../components/form/ContactLabelForm";
+import LabelIcon from "../../../components/icons/LabelIcon";
+import { ContactType, LabelType } from "../../../types";
 // import { Badge } from "@/components/ui/badge";
 
-export default function ContactCard({ contact }:{ contact?:ContactType }){
-    if(!contact){
+export default function ContactCard({ contact:contactInfo, setContactInfo }:{ contact?:ContactType, setContactInfo?:any }){
+    const color = useRef(labelsColors()).current
+    if(!contactInfo){
         return <></>
     }
     return (
-        <div className={"flex justify-between flex-col h-full m-4 shadow shadow-gray-500"}>
-            <div className={"w-1/2 m-auto"}>
-                <CircleAvatar src={contact.avatarUrl} alt={contact.email} size="full" />
+        <div className="bg-slate-900 h-full">
+            <div className="h-64 overflow-hidden flex flex-col justify-center">
+                <img className="w-full object-cover blur" src={contactInfo.avatarUrl} alt="" />
             </div>
-            <div className={"px-4"}>
-                <div className={"flex justify-between py-4"}>
-                    <h3 className={"text-3xl"}>{contact?.name}</h3>
-                    <Link className={buttonVariants({ size:"sm"})} to={`/contacts/${contact.id}`}>
-                        Editar este contacto
-                    </Link>
+            <div className="w-full flex justify-center h-32 relative">
+                <div className=" absolute rounded-full p-1 bg-white w-64 bg-gradient-to-tr from-sky-400 to-green-400 translate-y-[-50%]">
+                    <img className="rounded-full w-full aspect-square object-cover" src={contactInfo.avatarUrl} alt="" />
                 </div>
-                <div className="text-xl py-4 fill-white">
-                    {contact.email && 
-                        <div className="grid grid-cols-[24px_1fr] items-center gap-4">
-                            <GmailIcon/>
-                            <p>{contact.email}</p>
-                        </div>
+            </div>
+            <div className="flex justify-center items-center gap-2 p-2" >
+
+                <h3 className="text-gray-100 text-4xl text-center">{contactInfo.name}</h3>
+                {setContactInfo && <Popup nested modal trigger={<button className="btn primary sm"><LabelIcon /></button>} >
+                    {
+                        ((close:any) => (
+                            <div>
+                                <ContactLabelForm 
+                                    contactId={contactInfo.id} 
+                                    name={contactInfo.name} 
+                                    labels={contactInfo.labels} 
+                                    setLabels={(labels:LabelType[]) => {
+                                        setContactInfo(({...contactInfo, labels}))
+                                        close()
+                                    }}
+                                />
+                            </div>
+                        )) as any
                     }
-                    <div className="grid grid-cols-[24px_1fr] items-center gap-4">
-                        <PhoneIcon/>
-                        <p>{contact.phoneNumber}</p>
-                    </div>
+                </Popup>}
+            </div>
+            <div className="text-gray-200 p-2">
+                <p className="text-2xl">Información personal</p>
+                <div className="text-xl">
+                { contactInfo.phoneNumber && <p>{contactInfo.phoneNumber}</p> } 
+                { contactInfo.email && <p>{contactInfo.email}</p> } 
+                <div>
+                    <h4 className="text-lg pt-2 -mb-2">Etiquetas:</h4>
+
+                    <ul className="flex gap-3 justify-start items-start flex-wrap py-2">
+                        {
+                            contactInfo.labels.map((label, index) => (
+                                <li className={`px-2 rounded-md text-white font bold ${color.next().value}`} key={index}>{label.name}</li>
+                            ))
+                        }
+                    </ul>
+                </div>
                 </div>
             </div>
-                <ScrollArea className={"h-32 border border-gray-200 border-x-0"}>
-                    <div className={"flex gap-4 p-2 justify-start flex-wrap bg-gray-400/10 hover:bg-gray-400/20 transition"}>
+            <div>
+                <p className="text-2xl pl-2">Redes sociales</p>
+                <ScrollArea  className={"bg-gray-700 hover:bg-gray-600 transition py-1"}>
+                    <div className="flex gap-8 p-2 justify-start">
                         {
-                            contact.socialMedia?.length > 0 ? 
-                            contact.socialMedia.map(el => <SocialMediaDisplay key={`social_media_display_${el.id}`} socialMedia={el} /> ) : 
-                            <p>Esta cuenta no tiene ninguna red social <Link className={buttonVariants({ size:"sm", variant:"link"})} to={`/contacts/${contact.id}`}>asigna una</Link></p>
+                            contactInfo.socialMedia && contactInfo.socialMedia.map(el => <SocialMediaDisplay key={`social_media_display_${el.id}`} socialMedia={el} /> )
                         }
                     </div>
+                    <ScrollBar orientation="horizontal" />
                 </ScrollArea>
+            </div>
         </div>
     )
+}
+
+function* labelsColors(){
+    const  colors = ["bg-red-500", "bg-orange-500", "bg-yellow-500",  "bg-green-500", "bg-blue-500", "bg-indigo-500", "bg-violet-500", "bg-pink-500", "bg-gray-500"]
+    let i = Math.floor(Math.random() * colors.length)
+    while(true){
+        yield colors[i]
+        i++
+        if( i >= colors.length){
+            i = 0
+        }
+    }
+
 }
