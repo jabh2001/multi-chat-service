@@ -4,6 +4,7 @@ import SocketPool from "../../libs/message-socket/socketConnectionPool";
 import { getAsignedUserByIdSchema, updateInboxConversation } from "../../service/conversationService";
 import { getInboxByName } from "../../service/inboxService";
 import WS from "../../libs/message-socket/websocket-adapter";
+import { SocketError } from "../../libs/message-socket/sockets/errors";
 
 const clients = getClientList()
 const messageWsRouter = Router()
@@ -39,6 +40,10 @@ messageWsRouter.ws('/conversation/:id', async (ws, rq) => {
                 ws.send(JSON.stringify(result))
             }
         } catch (error) {
+            if(error instanceof SocketError){
+                clients.emitToClients("socket-error", {message: error.message, socketName:error.socket.folder })
+
+            }
             console.error("Error parsing JSON:", error);
         }
     });

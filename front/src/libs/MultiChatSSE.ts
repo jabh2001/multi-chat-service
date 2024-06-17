@@ -47,6 +47,7 @@ export type MultiChatEventMap = {
     "insert-fast-media-message":FastMediaMessageType,
     "update-fast-media-message":Partial<FastMediaMessageType>,
     "delete-fast-media-message":FastMediaMessageType["id"][],
+    "socket-error":{ message:string, socketName:string }
 } & { 
     [key in `qr-${number}` | `qr-update-${number}`]: {name:string, user:any | false, qr:string};
 }& { 

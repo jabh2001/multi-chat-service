@@ -16,6 +16,7 @@ import { Socket } from "./socket"
 import { MediaMessageType } from "../../../types"
 import { BAILEYS_SESSION_FOLDER } from "../../../constants"
 import { InboxType, MessageType } from "../../schemas"
+import { SocketSessionError } from "./errors"
 
 const sseClients = getClientList()
 
@@ -217,7 +218,7 @@ export class WhatsAppBaileysSocket extends Socket {
     async sendMessage(phone: string, message: Omit<MessageType, "id">): Promise<Omit<MessageType, "id">> {
         if (await this.verifyStatus() === false) {
             console.error("No active session")
-            throw new Error("No active session")
+            throw new SocketSessionError(this)
         }
         const mensaje = {
             text: message.content
