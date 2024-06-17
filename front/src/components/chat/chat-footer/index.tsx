@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import EmojiPicker from "emoji-picker-react"
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
@@ -13,7 +13,17 @@ import { FastMessageType } from "../../../libs/schemas";
 
 export default function ChatFooter(){
     const formRef = useRef<HTMLFormElement>(null)
-    const { handleSubmit, message, setMessage, handleSendFastMessage:_ } = useMessageForm()
+    const files = useMessageMedia(state => state.files)
+    const dFiles = useDebounce(files)
+    const { handleSubmit, message, setMessage, handleSendFastMessage } = useMessageForm()
+    
+    useEffect(() => {
+        if(files.length > 0) {
+            const button:HTMLButtonElement | null | undefined = formRef.current?.querySelector("input[type=submit]")
+            button?.click()
+        }
+    }, [dFiles])
+
     const handleKeyDown = (e : React.KeyboardEvent<HTMLInputElement>) => {
         if(e.key === 'Enter' && !e.shiftKey){
             e.preventDefault()
@@ -24,7 +34,7 @@ export default function ChatFooter(){
     return (
         <form className="chat-footer flex-none" ref={formRef} onSubmit={handleSubmit}>
             <div className="flex flex-row items-center p-4">
-                <MoreButton />
+                <MoreButton sendFastMessage={ f => handleSendFastMessage(f.id)} />
                 <PhotoButton />
                 <CameraButton />
                 {/* <MicrophoneButton /> */}
@@ -47,7 +57,7 @@ export default function ChatFooter(){
     )
 }
 
-const MoreButton = () => (
+const MoreButton = ({ sendFastMessage }:{ sendFastMessage:(fastMessage:FastMessageType) => void}) => (
     <Popup trigger={(
         <button type="button" className="flex flex-shrink-0 focus:outline-none mx-2 text-blue-600 hover:text-blue-700 w-6 h-6">
             <svg viewBox="0 0 20 20" className="w-full h-full fill-current">
@@ -57,12 +67,9 @@ const MoreButton = () => (
         )}
         position="top center"
         contentStyle={{ background:"hsl(222.2, 92%, 4.9%)", minWidth:"250px", border:"none", paddingBlock:16}}
+        nested
     >
-        <MenuFastMessageInputOption
-            onSelectMessage={() => {
-
-            }}
-        />
+        <MenuFastMessageInputOption onSelectMessage={sendFastMessage} />
     </Popup>
 )
 const PhotoButton = () => {
@@ -177,7 +184,7 @@ function MenuFastMessageInputOption({ onSelectMessage }:{ onSelectMessage:(fastM
             )}
             modal
             className="relative"
-            open={true}
+            nested
         >
             <div className="text-black p-8">
 

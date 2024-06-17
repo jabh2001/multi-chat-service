@@ -53,7 +53,7 @@ export default function ContactCard({ contact:contactInfo, setContactInfo }:{ co
 
                     <ul className="flex gap-3 justify-start items-start flex-wrap py-2">
                         {
-                            contactInfo.labels.map((label, index) => (
+                            contactInfo.labels?.map((label, index) => (
                                 <li className={`px-2 rounded-md text-white font bold ${color.next().value}`} key={index}>{label.name}</li>
                             ))
                         }
@@ -66,7 +66,7 @@ export default function ContactCard({ contact:contactInfo, setContactInfo }:{ co
                 <ScrollArea  className={"bg-gray-700 hover:bg-gray-600 transition py-1"}>
                     <div className="flex gap-8 p-2 justify-start">
                         {
-                            contactInfo.socialMedia && contactInfo.socialMedia.map(el => <SocialMediaDisplay key={`social_media_display_${el.id}`} socialMedia={el} /> )
+                            contactInfo.socialMedia && contactInfo.socialMedia?.map(el => <SocialMediaDisplay key={`social_media_display_${el.id}`} socialMedia={el} /> )
                         }
                     </div>
                     <ScrollBar orientation="horizontal" />

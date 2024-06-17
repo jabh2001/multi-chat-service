@@ -15,7 +15,7 @@ const useMessageForm =  () => {
     const user = useAuth(state => state.user)
     const contact = useConversationStore(store => store.conversation?.contact)
     const inbox = useConversationStore(store => store.conversation)?.inbox
-    
+
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
         const  listBufferBase64 = await Promise.all(
@@ -37,11 +37,9 @@ const useMessageForm =  () => {
         }
 
         if (ws && ws.readyState === WebSocket.OPEN) {
-            console.log(1)
             ws.send(JSON.stringify(datosEnviar));
             setMessage("")
             reset()
-            console.log(12)
         }
     };
 
