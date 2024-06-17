@@ -215,18 +215,29 @@ export class WhatsAppBaileysSocket extends Socket {
         sseClients.emitToClients("qr-update", { name: this.folder, user: this.sock?.user ?? false, qr: this.getQRBase64() })
     }
     async sendMessage(phone: string, message: Omit<MessageType, "id">): Promise<Omit<MessageType, "id">> {
+        if (await this.verifyStatus() === false) {
+            console.error("No active session")
+            throw new Error("No active session")
+        }
         const mensaje = {
             text: message.content
-        };
-        const wMessage =  await this.sock.sendMessage(`${phone}@s.whatsapp.net`, mensaje);
+        }
+        const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, mensaje)
         message.whatsappId = wMessage.key.id
         return message
     }
+    
     async sendMediaMessage(phone: string, message: MessageType, media: MediaMessageType): Promise<Omit<MessageType, "id">> {
-        const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, media);
+        if (await this.verifyStatus() === false) {
+            console.error("No active session")
+            throw new Error("No active session")
+        }
+        const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, media)
         message.whatsappId = wMessage.key.id
         return message
     }
+    
+
     get isQRBased(){
         return true
     }
