@@ -29,7 +29,8 @@ type Inputs = {
 }
 
 type Keys = "name" | "email" | "phoneNumber" 
-const resolver = zodResolver(contactSchema.omit({ id: true, avatarUrl: true }).extend({ picture: z.any() }))
+const schemaResolver = contactSchema.partial({ email:true }).omit({ id: true, avatarUrl: true }).extend({ picture: z.any() })
+const resolver = zodResolver(schemaResolver)
 
 export default function ContactEditForm({ edited, onEdit, onAdd }: Props) {
     const { control, handleSubmit, setValue, reset } = useForm<Inputs>({ resolver })
@@ -38,10 +39,9 @@ export default function ContactEditForm({ edited, onEdit, onAdd }: Props) {
     useEffect(() => {
         if (edited !== undefined) {
             for (const key of Object.keys(edited)) {
-                console.log('llaves', Object.keys(edited))
                 if (["name", "email", "phoneNumber", ].includes(key)) {
                     const KEY = key as Keys
-                    setValue(KEY, edited[KEY])
+                    setValue(KEY, edited[KEY] ?? "")
                 }
             }
         } else {

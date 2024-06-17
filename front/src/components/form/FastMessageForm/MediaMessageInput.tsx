@@ -9,7 +9,7 @@ export default function MediaMessageInput({ name, control, quantity }:{name:stri
             {
                 Array(quantity).fill(0).map((_, i) => (
                     <div className={styles.mediaInput} key={`MediaMessageInput-${name}-${i}`} >
-                        <Textarea name={`${name}Text${i}`} control={control} />
+                        <Textarea name={`${name}Text${i}`} control={control} rows={1}/>
                         <FileInput name={`${name}File${i}`} control={control} />
                     </div>
                 ))

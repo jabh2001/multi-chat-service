@@ -79,8 +79,8 @@ svg{
   @apply inline-flex items-center justify-center gap-2 bg-blue-500 text-center font-medium text-white hover:bg-opacity-90 py-4 px-8 rounded-xl;
 
   > svg {
-    width: 20px;
-    height: 20px;
+    /* width: 20px;
+    height: 20px; */
     fill: currentColor;
   }
 }
@@ -92,18 +92,33 @@ svg{
 }
 .btn.primary{
   @apply bg-blue-500;
+  &.link {
+    @apply text-blue-500 decoration-blue-500 bg-transparent p-1 hover:underline;
+  }
 }
 .btn.secondary{
   @apply bg-gray-500;
+  &.link {
+    @apply text-gray-500 decoration-gray-500 bg-transparent p-1 hover:underline;
+  }
 }
 .btn.success{
   @apply bg-emerald-600;
+  &.link {
+    @apply text-emerald-600 decoration-emerald-600 bg-transparent p-1 hover:underline;
+  }
 }
 .btn.error{
   @apply bg-red-600;
+  &.link {
+    @apply text-red-600 decoration-red-600 bg-transparent p-1 hover:underline;
+  }
 }
 .btn.warning{
   @apply bg-amber-400;
+  &.link {
+    @apply text-amber-400 decoration-amber-400 bg-transparent p-1 hover:underline;
+  }
 }
 .input{
     display: flex;

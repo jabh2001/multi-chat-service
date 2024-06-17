@@ -9,9 +9,10 @@ import { getAgentTeam } from "../../../service/api";
 import HeaderSearchBar from "../../../components/HeaderSearchBar";
 import PencilIcon from "../../../components/icons/PencilIcon";
 import TrashIcon from "../../../components/icons/TrashIcon";
-import LabelIcon from "../../../components/icons/LabelIcon";
+import TeamIcon from "../../../components/icons/TeamIcon";
 import { ProfileIcon } from "../../../components/icons";
 import { useDebounce } from "../../../hooks/useDebounce";
+import ConfirmTooltip from "../../../components/confirm-tooltip";
 
 const baseName = "/config/agents"
 
@@ -74,7 +75,7 @@ function IndexPage(){
                                     <p className="font-medium">Tipo</p>
                                 </div>
                                 <div className="col-span-1 flex items-center">
-                                    <p className="font-medium">Etiquetas</p>
+                                    <p className="font-medium">Equipos</p>
                                 </div>
                                 <div className="col-span-1 flex items-center">
                                     <p className="font-medium">Editar</p>
@@ -105,11 +106,11 @@ function IndexPage(){
                                             </p>
                                         </div>
                                         <div className="col-span-1 items-center flex">
-                                            <button className="btn primary" onClick={() => {
+                                            <button className="btn primary text-white fill-white" onClick={() => {
                                                 setOpenDrawer(true)
                                                 setAgent(agent)
                                             }}>
-                                                <LabelIcon />
+                                                <TeamIcon />
                                             </button>
                                         </div>
                                         <div className="col-span-1 items-center flex">
@@ -118,9 +119,11 @@ function IndexPage(){
                                             </button>
                                         </div>
                                         <div className="col-span-1 items-center flex">
-                                            <button className="btn error" onClick={() => handleDelete(agent)}>
-                                                <TrashIcon />
-                                            </button>
+                                            <ConfirmTooltip onConfirm={() => handleDelete(agent)}>
+                                                <button className="btn error">
+                                                    <TrashIcon />
+                                                </button>
+                                            </ConfirmTooltip>
                                         </div>
                                     </div>
                                 ))}
@@ -136,7 +139,7 @@ function IndexPage(){
                     </div>
                     <h3>Nuevo agente</h3>
                 </div>
-                <div>
+                <div className="pt-2">
                     <AgentForm edited={edited} resetEdited={()=>setEdited(undefined)} />
                 </div>
             </div>

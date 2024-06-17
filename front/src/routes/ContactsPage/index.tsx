@@ -1,15 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { PhoneIcon } from "../../components/icons"
 import ContactEditForm from "../../components/form/ContactForm"
 import HeaderSearchBar from "../../components/HeaderSearchBar"
 import { getContacts } from "../../service/api"
 import { type ContactType } from "../../types"
+import { useDebounce } from "../../hooks/useDebounce"
 
 export default function ContactsPage(){
+    const [ filter, setFilter ] = useState("")
+    const debounceFilter = useDebounce(filter)
     const [searchParams] = useSearchParams()
-    const [contacts, setContacts ] = useState<ContactType[]>([])
+    const [rawContacts, setContacts ] = useState<ContactType[]>([])
     const navigate = useNavigate()
+
+    const contacts = useMemo(() => rawContacts.filter(contact => {
+        return contact.name.toLowerCase().includes(filter.toLowerCase()) ||  contact.phoneNumber.toLowerCase().includes(filter.toLowerCase())
+    } ), [debounceFilter, rawContacts])
 
     useEffect(()=>{
         const data = async ()=>{
@@ -22,7 +29,7 @@ export default function ContactsPage(){
     return (
         <div className="grid grid-cols-4 bg-gray-200 h-screen">
             <div className="col-span-3">
-                <HeaderSearchBar placeholder="Search contact" />
+                <HeaderSearchBar placeholder="Search contact" value={filter} onChange={setFilter} onRemove={()=>setFilter("")}  />
                 <div className="flex justify-center pt-8">
                     <div className="rounded-xl border border-slate-300 bg-white shadow-default w-[90%]">
                         <div className="py-6 px-4 md:px-6 xl:px-6  border-b border-slate-300">
@@ -51,7 +58,7 @@ export default function ContactsPage(){
                                     <div className="col-span-3 flex items-center">
                                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                                             <div className="h-16 w-16 rounded-md">
-                                                <img src={avatarUrl} alt="Product" className="rounded-full" />
+                                                <img src={avatarUrl} alt="Product" className="rounded-full aspect-square object-cover" />
                                             </div>
                                             <p className="text-sm text-black">
                                                 {name}
@@ -64,8 +71,13 @@ export default function ContactsPage(){
                                         </p>
                                     </div>
                                     <div className="col-span-2 hidden items-center justify-self-center sm:flex">
+<<<<<<< HEAD
                                         <button className="btn primary" onClick={() => navigate("id")}>
                                             Ver perfil  
+=======
+                                        <button className="btn primary" onClick={() => navigate("" + id)}>
+                                            Ver perfil
+>>>>>>> 8cc691fbf0068195780f30da0f914e2bda060fa0
                                         </button>
                                     </div>
                                 </div>

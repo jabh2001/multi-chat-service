@@ -1,19 +1,18 @@
 import { SocialMediaType } from "../../types"
 import SocialMediaIcon from "../icons/SocialMediaIcon"
-import styles from "./index.module.css"
 
 type Props = {
     socialMedia:SocialMediaType
     size?: "sm" | "md" | "lg" | "xl" | "full"
 }
 export default function SocialMediaDisplay({ socialMedia, size="md" }:Props){
-    const sizes = { sm:styles.sm, md:styles.md, lg:styles.lg, xl:styles.xl, full:styles.full };
+    const sizes = { sm:"w-4", md:"w-8", lg:"w-12", xl:"w-16", full:"w-full" };
     return (
-        <a href={socialMedia.url} className={styles.container}>
+        <a href={socialMedia.url} className={"flex flex-col justify-center items-center min-w-[50px]"}>
             <span className={sizes[size]}>
-                <SocialMediaIcon socialMedia={socialMedia.name} />
+                <SocialMediaIcon className="w-full" socialMedia={socialMedia.name} />
             </span>
-            <div>{socialMedia.displayText}</div>
+            <p>{socialMedia.displayText}</p>
         </a>
     )
 }

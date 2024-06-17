@@ -49,7 +49,10 @@ export default function SocialMediaForm({ edited, onEdit, onAdd }:Props){
         })}>
             <label className="input">
                 <span>Red social</span>
-                <select {...register("name")}>
+                <select
+                    {...register("name")}
+                    className={`relative z-20 w-full appearance-none rounded border border-slate-200 bg-transparent py-2 px-4 outline-none transition focus:border-primary active:border-primary text-black`}
+                >
                     <option disabled>Selecciona</option>
                     <option value="facebook">Facebook</option>
                     <option value="gmail">Gmail</option>
@@ -68,7 +71,7 @@ export default function SocialMediaForm({ edited, onEdit, onAdd }:Props){
                 <NormalInput name="displayText" control={control} label="Nombre" />
             </div>
             <div>
-                <button className="btn primary">Guardar</button>
+                <button className="btn primary w-full">Guardar</button>
             </div>
         </form>
     )

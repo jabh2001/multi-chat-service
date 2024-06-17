@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { Control, Controller } from "react-hook-form"
-import styles from "./index.module.css"
 
 export default function KeyWordsInput({ name, control}:{name:string, control:Control<any, any, any>}){
     // const [keyWordsCount, setKeyWordsCount] = useState(1)
@@ -25,7 +24,7 @@ export default function KeyWordsInput({ name, control}:{name:string, control:Con
                                 <input
                                     key={`key-words-input-${name}-${i}`}
                                     type="text" 
-                                    className={styles.keyWordInput}
+                                    className={"block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"}
                                     placeholder="palabra clave"
                                     value={v}
                                     onChange={evt => {

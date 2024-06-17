@@ -22,12 +22,15 @@ export default function ContactLabelForm({ contactId, name, labels, setLabels }:
 
     return <form className={styles.form} onSubmit={handleSubmit}>
         <AgentProtection>
-            <h3 className={styles.title}> Etiquetas de {name}</h3>
+            <h3 className="text-black text-2xl"> Etiquetas de {name}</h3>
             <div className={styles.labels}>
                 <LabelsCheckboxes selectedIds={selectedIds} setSelectedIds={setSelectedIds} />
             </div>
-            <div className={styles.button}>
-                <button className="btn primary">guardar</button>
+            <div className="flex justify-end items center gap-8">
+                <span className="text-gray-700 w-64">
+                    Selecciona las etiquetas que representen el estado del contacto
+                </span>
+                <button className="btn primary sm">guardar</button>
             </div>
             <Snackbar open={open} handleClose={() => setOpen(false)} >
                 Se ha guardado la nueva configuración

@@ -32,7 +32,7 @@ const ChatCard: React.FC<CardProps> = (props) => {
                 </div>
             </div>
             {
-                isNewMessage && <div className="bg-blue-700 w-3 h-3 rounded-full flex flex-shrink-0 hidden md:block group-hover:block"></div>
+                isNewMessage && <div className="bg-blue-700 w-3 h-3 rounded-full flex flex-shrink-0 md:block group-hover:block"></div>
             }
         </div>
     );

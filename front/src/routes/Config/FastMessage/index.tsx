@@ -1,14 +1,15 @@
+import { useMemo, useState } from "react";
 import { useNavigate, type RouteObject } from "react-router-dom";
 import { useFastMessage } from "../../../hooks/useFastMessage";
-import styles from './index.module.css';
 import FastMessageForm from "../../../components/form/FastMessageForm";
-import SearchBar from "../../../components/SearchBar";
-import { useState } from "react";
-import { ReactTabulator, reactFormatter } from "react-tabulator";
-import useTabulatorFilters from "../../../hooks/useTabulatorFilters";
 import FastMessageDetailPage from "./FastMessageDetailPage";
-import { ActionButtons } from "../../../components/TableData/ActionButtons";
 import { FastMessageType } from "../../../libs/schemas";
+import { useDebounce } from "../../../hooks/useDebounce";
+import HeaderSearchBar from "../../../components/HeaderSearchBar";
+import LightingIcon from "../../../components/icons/LightingIcon";
+import TrashIcon from "../../../components/icons/TrashIcon";
+import PencilIcon from "../../../components/icons/PencilIcon";
+import ConfirmTooltip from "../../../components/confirm-tooltip";
 
 const baseName = "/config/fast-message"
 
@@ -25,43 +26,86 @@ const fastMessageRoute : RouteObject[] = [
 ];
 function IndexPage(){
     const navigate = useNavigate()
-    const { onRef, clearFilters, include } = useTabulatorFilters()
     const [ filter, setFilter ] = useState("")
-    const {fastMessages, deleteFastMessage} = useFastMessage()
+    const debounceFilter = useDebounce(filter)
+    const {fastMessages:rawFastMessage, deleteFastMessage} = useFastMessage()
 
-    const handleFilter = ()=>{
-        filter == "" ? clearFilters() : include("keyWords", filter)
-    }
+    const fastMessages = useMemo(() => rawFastMessage.filter(fastMessages => {
+        return fastMessages.title.toLowerCase().includes(filter.toLowerCase()) || fastMessages.keyWords.toLowerCase().includes(filter.toLowerCase())
+    } ), [debounceFilter, rawFastMessage])
+
     const handleDelete = ({ id }:FastMessageType) => deleteFastMessage(id)
 
-    const removeFilters = ()=>{
-        clearFilters()
-        setFilter("")
-    }
     return (
-        <div className={styles.container}>
-            <div className={styles.searchBar}>
-                <h3>⚡Mensajes rápidos</h3>
-                <SearchBar   placeholder="Search fastMessage..."  value={filter} onChange={setFilter} onSearch={handleFilter} onRemove={removeFilters} />
-                <button className="btn secondary" onClick={handleFilter}>Filtrar</button>
+    
+        <div className="grid grid-cols-4 bg-gray-200 h-screen">
+            <div className="col-span-3">
+                <HeaderSearchBar placeholder="Search teams" value={filter} onChange={setFilter} onRemove={()=>setFilter("")} />
+                <div>
+                    <div className="flex justify-center pt-8">
+                        <div className="rounded-xl border border-slate-300 bg-white shadow-default w-[90%]">
+                            <div className="py-6 px-4 md:px-6 xl:px-6  border-b border-slate-300">
+                                <h4 className="text-xl font-semibold text-black">
+                                    Lista de mensajes rápidos
+                                </h4>
+                            </div>
+
+                            <div className="grid grid-cols-4 border-b border-slate-300 py-4 px-4  md:px-6 2xl:px-6 text-gray-500 bg-gray-100/25">
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Nombre</p>
+                                </div>
+                                <div className="col-span-1 hidden items-center sm:flex">
+                                    <p className="font-medium">Descripción</p>
+                                </div>
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Editar</p>
+                                </div>
+                                <div className="col-span-1 flex items-center">
+                                    <p className="font-medium">Eliminar</p>
+                                </div>
+                            </div>
+                            <div className="max-h-[65vh] overflow-y-scroll">
+                                {fastMessages.map((fast) => (
+                                    <div className="grid grid-cols-4 border-b border-slate-300 py-4 px-4 md:px-6 2xl:px-6" key={"label_" + fast.id} >
+                                        <div className="col-span-1 items-center flex">
+                                            <p className="text-sm text-black">
+                                                {fast.title}
+                                            </p>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <p className="text-sm text-black">
+                                                {fast.keyWords}
+                                            </p>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <button className="btn warning" onClick={() => navigate(`/config/fast-message/${fast.id}/`)}>
+                                                <PencilIcon />
+                                            </button>
+                                        </div>
+                                        <div className="col-span-1 items-center flex">
+                                            <ConfirmTooltip onConfirm={() => handleDelete(fast)}>
+                                                <button className="btn error">
+                                                    <TrashIcon />
+                                                </button>
+                                            </ConfirmTooltip>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div> 
             </div>
-            <div className={styles.fastMessagesContainer}>
-                <ReactTabulator
-                    onRef={onRef}
-                    options={{
-                        layout:"fitColumns"
-                    }}
-                    columns={[
-                        {title:"V", width:36, cellClick:(_evt, cell:any) => navigate(`/config/fast-message/${cell.getData().id}/`)},
-                        {field:"title", title:"Nombre", widthGrow:1 },
-                        {field:"keyWords", title:"palabras clave", widthGrow:2 },
-                        {title:"actions", formatter:reactFormatter(<ActionButtons onDelete={handleDelete} />) }
-                    ]}
-                    data={fastMessages}
-                />
-            </div>  
-            <div className={styles.explain}>
-                <FastMessageForm />
+            <div className="bg-white border-gray-200 p-4 border-l-2">
+                <div className="flex justify-start items-center gap-4 text-primary fill-primary text-xl font-bold mb-4 ">
+                    <div>
+                        <LightingIcon />
+                    </div>
+                    <h3>Nuevo mensaje rápido</h3>
+                </div>
+                <div>
+                    <FastMessageForm />
+                </div>
             </div>
         </div>
     )
