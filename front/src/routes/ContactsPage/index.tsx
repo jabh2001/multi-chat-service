@@ -71,8 +71,13 @@ export default function ContactsPage(){
                                         </p>
                                     </div>
                                     <div className="col-span-2 hidden items-center justify-self-center sm:flex">
+<<<<<<< HEAD
+                                        <button className="btn primary" onClick={() => navigate("id")}>
+                                            Ver perfil  
+=======
                                         <button className="btn primary" onClick={() => navigate("" + id)}>
                                             Ver perfil
+>>>>>>> 8cc691fbf0068195780f30da0f914e2bda060fa0
                                         </button>
                                     </div>
                                 </div>
