@@ -62,10 +62,13 @@ export async function saveNewConversation(conversation:Omit<ConversationSchemaTy
     const newConversation = await ConversationModel.insert.value({...conversation }).fetchOneQuery<ConversationType>();
     let allData = await constructConversationQuery().filter(ConversationModel.c.id.equalTo(newConversation.id)).fetchOneQuery<any>()
     const sendData = {
-        ...allData,
+        ...allData.conversation,
         contact:{
-            ...allData,
+            ...allData.contact,
             avatarUrl:getContactAvatarUrlWithoutReq(allData.contact.id)
+        },
+        inbox:{
+            ...allData.inbox,
         },
         lastMessage: "",
         lastMessageDate: "",

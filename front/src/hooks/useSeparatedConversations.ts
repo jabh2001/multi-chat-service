@@ -138,6 +138,7 @@ export default function useSeparatedConversations(){
             })
             const addListener = sse.on("insert-conversation", (conversation) => {
                 add(conversation)
+                
             })
             return () => { 
                 sse.remove("update-conversation-last-message", listener)

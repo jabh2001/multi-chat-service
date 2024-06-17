@@ -4,7 +4,7 @@ import Chat from "../../components/chat"
 function ChatPage() {
   
   return (
-  <main className="flex-grow flex flex-row min-h-0 max-h-screen">
+  <main className="flex-grow flex flex-row min-h-0 max-h-screen h-screen">
     <ConversationSection />
     <Chat />
   </main>

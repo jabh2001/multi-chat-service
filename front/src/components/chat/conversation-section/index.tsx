@@ -3,7 +3,7 @@ import useSeparatedConversations from "../../../hooks/useSeparatedConversations"
 import ChatsDiv from "../../../components/ChatsDiv";
 
 export default function ConversationSection(){
-  const { conversations, mineConversation, unassignedConversation } = useSeparatedConversations()
+  const { mineConversation, unassignedConversation } = useSeparatedConversations()
   // const { all, mine, unassigned} = useMessageCount()
     return (
       <section className="flex flex-col flex-none overflow-auto w-24  group lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out max-h-screen">
@@ -24,7 +24,7 @@ export default function ConversationSection(){
             </form>
         </div>
         <div className="contacts p-2 flex-1 overflow-y-scroll">
-            <ChatsDiv conversations={conversations} prefix={"chatsAll"} />
+            {/* <ChatsDiv conversations={conversations} prefix={"chatsAll"} /> */}
             <ChatsDiv conversations={mineConversation} prefix={"chatsMine"} />
             <ChatsDiv conversations={unassignedConversation} prefix={"chatsUnassigned"} />
         </div>
