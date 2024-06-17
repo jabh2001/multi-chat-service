@@ -44,6 +44,8 @@ const useAudioRecorder = () => {
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             setStream(stream)
             setIsRecording(true)
+            setBase64Data("")
+            setAudio(new Audio)
         }).catch((err) => console.error(err))
         setIsPaused(false)
     }

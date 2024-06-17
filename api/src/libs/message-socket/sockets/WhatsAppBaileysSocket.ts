@@ -233,6 +233,10 @@ export class WhatsAppBaileysSocket extends Socket {
             console.error("No active session")
             throw new Error("No active session")
         }
+        let sendedMedia:any = media
+        if(media.audio){
+            sendedMedia = {...sendedMedia, ppt:true, seconds:10}
+        }
         const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, media)
         message.whatsappId = wMessage.key.id
         return message
