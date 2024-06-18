@@ -27,6 +27,24 @@ const useTeam = ()=>{
     const store = useTeamStore()
     const {firstFetch, teams} = store
 
+    useEffect(() => {
+        const nameSet = new Set<string>()
+        for(const team of teams){
+            nameSet.add(team.name)
+        }
+        if(nameSet.size !== teams.length){
+            // remover los duplicados
+            store.setTeams( teams.filter( (team) => {
+                if( nameSet.has(team.name) ){
+                    nameSet.delete(team.name)
+                    return true
+                } 
+                return false
+            } ) )
+
+        }
+    }, [teams])
+
     useEffect(()=>{
         if(firstFetch){
             const getData = async () => {

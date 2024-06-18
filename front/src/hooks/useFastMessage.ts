@@ -28,6 +28,24 @@ const useFastMessage = () => {
     const store = useFastMessageStore()
     const { fastMessages } = store
 
+    useEffect(() => {
+        const keySet = new Set<string>()
+        for(const fastMessage of fastMessages){
+            keySet.add(`${fastMessage.title}-${fastMessage.keyWords}`)
+        }
+        if(keySet.size !== fastMessages.length){
+            // remover los duplicados
+            store.setFastMessages( fastMessages.filter( (fastMessage) => {
+                if( keySet.has(`${fastMessage.title}-${fastMessage.keyWords}`) ){
+                    keySet.delete(`${fastMessage.title}-${fastMessage.keyWords}`)
+                    return true
+                } 
+                return false
+            } ) )
+
+        }
+    }, [fastMessages])
+
     useEffect(()=>{
         const getData = async () => {
             const fastMessages = await getFastMessages()

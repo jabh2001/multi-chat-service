@@ -28,6 +28,24 @@ const useLabel = () => {
     const store = useLabelStore()
     const {firstFetch, labels} = store
 
+    useEffect(() => {
+        const nameSet = new Set<string>()
+        for(const label of labels){
+            nameSet.add(label.name)
+        }
+        if(nameSet.size !== labels.length){
+            // remover los duplicados
+            store.setLabels( labels.filter( (label) => {
+                if( nameSet.has(label.name) ){
+                    nameSet.delete(label.name)
+                    return true
+                } 
+                return false
+            } ) )
+
+        }
+    }, [labels])
+
     useEffect(()=>{
         if(firstFetch){
             const getData = async () => {

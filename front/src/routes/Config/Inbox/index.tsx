@@ -155,7 +155,7 @@ function IndexPage() {
                     <div>
                         <EntradasIcon />
                     </div>
-                    <h3>Nuevo mensaje rápido</h3>
+                    <h3>Nueva conexión</h3>
                 </div>
                 <div>
                     <InboxForm />

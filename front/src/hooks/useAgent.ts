@@ -39,6 +39,24 @@ const useAgent = () => {
         }
         getData()
     }, [])
+
+    useEffect(() => {
+        const emailSet = new Set<string>()
+        for(const agent of agents){
+            emailSet.add(agent.email)
+        }
+        if(emailSet.size !== agents.length){
+            // remover los duplicados
+            store.setAgents( agents.filter( (agent) => {
+                if( emailSet.has(agent.email) ){
+                    emailSet.delete(agent.email)
+                    return true
+                } 
+                return false
+            } ) )
+
+        }
+    }, [agents])
     useEffect(()=>{
         if(multiChatSSE){
             const insertListener = multiChatSSE.on("insert-agent", agent => store.addAgent(agent as any))
