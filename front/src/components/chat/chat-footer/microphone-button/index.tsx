@@ -1,4 +1,3 @@
-import Popup from "reactjs-popup"
 import useAudioRecorder from "../../../../hooks/useAudioRecorder"
 import useMessageMedia from "../../../../hooks/useMessageMedia"
 import { useEffect } from "react"

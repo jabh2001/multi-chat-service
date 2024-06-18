@@ -1,10 +1,6 @@
-import { MenuItem, MenuSection } from "../menu"
-import { HomeIcon } from "../icons"
 import { useLabel } from "../../hooks/useLabelStore"
 import useInboxStore from "../../hooks/useInboxStore"
 import { useEffect } from "react"
-import EntradasIcon from "../icons/EntradasIcon"
-import LabelIcon from "../icons/LabelIcon"
 import { GroupMenuItem } from "./Sidebar/items"
 
 export function LabelSection({ basePath }:{ basePath:string }){

@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import SidebarLinkGroup from './SidebarLinkGroup';
-import Logo from '../../../assets/chat.svg';
+// import Logo from '../../../assets/chat.svg';
 import { CommentIcon, ConfigIcon, PhoneIcon } from '../../../components/icons';
 import { GroupMenuItem, NavGroupHeader } from './items';
 import RightFromBracket from '../../../components/icons/RightFromBracket';
@@ -23,7 +23,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const sidebar = useRef<any>(null);
 
   const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
-  const [sidebarExpanded, setSidebarExpanded] = useState(
+  const [sidebarExpanded] = useState(
     storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
   );
   useEffect(()=>{
