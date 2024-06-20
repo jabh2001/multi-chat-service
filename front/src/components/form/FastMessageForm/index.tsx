@@ -106,7 +106,7 @@ export default function FastMessageForm({ edit }:{ edit?:FastMessageType}){
             <div className={styles.send}>
                 <button className="btn primary">Enviar</button>
             </div>
-            <Snackbar open={open} handleClose={handleClose}>
+            <Snackbar open={open && message.length > 0 && message[0] !== ""} handleClose={handleClose}>
                 {
                     message.map(m => (
                         <p key={m}>{m}</p>

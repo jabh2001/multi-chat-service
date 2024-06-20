@@ -77,7 +77,7 @@ export default function AgentForm({ edited, resetEdited }:{ edited:AgentType | U
                     <button className="btn primary">Next</button>
                     <button className="btn secondary">Clear</button>
                 </div>
-                <Snackbar open={open} handleClose={handleClose}>
+                <Snackbar open={open && message.length > 0 && message[0] !== ""} handleClose={handleClose}>
                     {
                         message.map(m => (
                             <p key={m}>{m}</p>

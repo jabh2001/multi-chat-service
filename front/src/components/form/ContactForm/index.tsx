@@ -79,7 +79,7 @@ export default function ContactEditForm({ edited, onEdit, onAdd }: Props) {
                 <button className="btn primary">Guardar</button>
 
             </div>
-            <Snackbar open={open} handleClose={handleClose}>
+            <Snackbar open={open && message.length > 0 && message[0] !== ""} handleClose={handleClose}>
                 {
                     message.map(m => (
                         <p key={m}>{m}</p>

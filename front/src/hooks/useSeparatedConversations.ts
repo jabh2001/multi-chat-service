@@ -9,6 +9,7 @@ import { transitionViewIfSupported } from "../service/general"
 import { useMessageCount } from "./useMessageCount"
 
 type Store = {
+    conversationsIds:Set<ConversationType["id"]>
     conversations:ConversationType[]
     search:string
     setSearch:(search:string) => void
@@ -20,10 +21,22 @@ type Store = {
 }
 export const useInnerConversationStore = create<Store>(set => {
     return ({
+        conversationsIds:new Set(),
         conversations:[],
         search:"",
         setSearch:(search) => set({ search }),
-        setConversation: (c) => set({conversations:c}),
+        setConversation: (c) => {
+            const conversationsIds = new Set<number>()
+            c.forEach((conversation) => conversationsIds.add(conversation.id))
+            const copy = new Set(conversationsIds)
+            const conversations = c.filter(conversation => {
+                if(copy.has(conversation.id)){
+                    copy.delete(conversation.id)
+                    return true
+                }
+            })
+            set({conversations, conversationsIds})
+        },
         update:(conversationId, conversation) => {
             set(
                 state => ({ 
@@ -39,7 +52,13 @@ export const useInnerConversationStore = create<Store>(set => {
             )
         },
         add(c){
-            set(state => ({ conversations:state.conversations.concat(c)}))
+            set(state => {
+                if(state.conversationsIds.has(c.id)){
+                    return {...state}
+                }
+                return ({ conversations:state.conversations.concat(c), conversationsIds:new Set([...state.conversationsIds, c.id]) })
+
+            })
         },
         fetch: async ({ label, inbox }) => {
             try {
