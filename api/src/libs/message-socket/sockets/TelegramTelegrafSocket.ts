@@ -150,7 +150,7 @@ export class TelegramTelegrafSocket extends Socket {
         message.whatsappId = message_id.toString()
         return message
     }
-    async sendMediaMessage( id: string, message: Omit<MessageType, "id">, { image, audio, video, document, caption }: MediaMessageType){
+    async sendMediaMessage( id: string, message: Omit<MessageType, "id">, { image, audio, video, document, caption, fileName }: MediaMessageType){
         if(image){
             const { message_id } = await this.bot.telegram.sendPhoto(id, Input.fromBuffer(image), { caption })
             message.whatsappId = message_id.toString()
@@ -161,7 +161,7 @@ export class TelegramTelegrafSocket extends Socket {
             const { message_id } = await this.bot.telegram.sendVideo(id, Input.fromBuffer(video), { caption })
             message.whatsappId = message_id.toString()
         } else if(document){
-            const { message_id } = await this.bot.telegram.sendDocument(id, Input.fromBuffer(document), { caption })
+            const { message_id } = await this.bot.telegram.sendDocument(id, Input.fromBuffer(document, fileName), { caption })
             message.whatsappId = message_id.toString()
         }
         return message

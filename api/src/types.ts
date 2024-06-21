@@ -79,4 +79,4 @@ export type VideoMessage = {
 export type DocumentMessage = {
     document:Buffer
 }
-export type MediaMessageType =  Partial<ImageMessage & AudioMessage & VideoMessage & DocumentMessage > & { caption?:string }
+export type MediaMessageType =  Partial<ImageMessage & AudioMessage & VideoMessage & DocumentMessage > & { caption?:string, mimetype?:string, fileName?:string }

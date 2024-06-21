@@ -101,7 +101,8 @@ export default class WS {
                 }  else if (isDocument(messageType)) {
                     message.contentType = Socket.MEDIA_MESSAGE.documentMessage
                     message.content = text
-                    message = await socket.sendMediaMessage(await socket.getContactId(contact), message, { document:buffer!})
+                    message = await socket.sendMediaMessage(await socket.getContactId(contact), message, { document:buffer!, caption: text || '', fileName: text || '', mimetype:messageType})
+
                 }
                 const result = await saveNewMessageInConversation(conversationId, message)
                 returnedList.push({ ...result, user })

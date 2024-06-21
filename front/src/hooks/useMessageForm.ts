@@ -2,7 +2,7 @@ import { useState } from "react";
 import useMessageMedia from "./useMessageMedia";
 import { useConversationStore } from "./useConversations";
 import useAuth from "./useAuth";
-import { convertFileToBase64 } from "../service/file";
+import { convertFileToBase64, isFileWithName } from "../service/file";
 import { useWebSocket } from "../components/chat";
 
 const useMessageForm =  () => {
@@ -18,13 +18,16 @@ const useMessageForm =  () => {
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async e => {
         e.preventDefault();
+        console.log(files)
         const  listBufferBase64 = await Promise.all(
             files.map(async (file, i) => ({ 
                 messageType:file.type,
                 base64:await convertFileToBase64(file),
-                text:i == 0 ? message : undefined
+                text:isFileWithName(file.name) ? file.name : i === 0 ?  message : undefined
+
             })
         ))
+        console.log(listBufferBase64)
         const datosEnviar = {
             conversationId,
             contact,

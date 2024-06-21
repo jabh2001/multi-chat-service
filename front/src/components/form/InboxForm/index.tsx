@@ -101,7 +101,7 @@ function TelegramForm({ onSubmit, onError }:{ onSubmit?:(inbox:any) => void, onE
     return (
         <form onSubmit={handleSubmit(async ({ name, telegramToken }) => {
             try {
-                onSubmit && onSubmit(await postInbox({name, telegramToken, channelType:"whatsapp"}))
+                onSubmit && onSubmit(await postInbox({name, telegramToken, channelType:"telegram"}))
             } catch (e) {
                 onError && onError(e)
             } finally {

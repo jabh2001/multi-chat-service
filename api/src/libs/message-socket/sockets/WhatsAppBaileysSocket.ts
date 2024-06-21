@@ -1,4 +1,4 @@
-import makeWASocket, { DisconnectReason, MessageUpsertType, downloadMediaMessage, proto, useMultiFileAuthState } from "@whiskeysockets/baileys"
+import makeWASocket, { DisconnectReason, MessageUpsertType, AnyMediaMessageContent, downloadMediaMessage, proto, useMultiFileAuthState } from "@whiskeysockets/baileys"
 import { Boom } from "@hapi/boom"
 import pino from "pino"
 import fs from "fs"
@@ -236,8 +236,8 @@ export class WhatsAppBaileysSocket extends Socket {
         let sendedMedia:any = media
         if(media.audio){
             sendedMedia = {...sendedMedia, ppt:true, seconds:10}
-        }
-        const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, media)
+        } 
+        const wMessage = await this.sock.sendMessage(`${phone}@s.whatsapp.net`, sendedMedia)
         message.whatsappId = wMessage.key.id
         return message
     }

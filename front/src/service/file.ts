@@ -27,6 +27,10 @@ export function convertBase64ToBlob(data:string, type:string){
     return blob
 }
 
+export function isFileWithName(filename:string){
+    return isPdf( filename ) || isWord( filename ) || isPowerPoint( filename ) || isExcel( filename )
+
+}
 /**
  * Verifica si el archivo es un PDF.
  * @param fileName - Nombre del archivo a verificar.
