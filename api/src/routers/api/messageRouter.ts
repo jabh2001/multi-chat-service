@@ -10,12 +10,13 @@ const clients = getClientList()
 const messageWsRouter = Router()
 
 messageWsRouter.ws('/conversation/:id', async (ws, rq) => {
-    const poll = SocketPool.getInstance()
     ////
     // este es el que se debe enviar a baileys
     ////
     ws.on('message', async (data) => {
         try {
+            const poll = SocketPool.getInstance()
+            
             const jsonData = JSON.parse(data.toString());
             if(jsonData.assignedUserId == null){
                 const inbox = await getInboxByName(jsonData.inbox);
@@ -30,6 +31,7 @@ messageWsRouter.ws('/conversation/:id', async (ws, rq) => {
             if(!socket){
                 return 
             }
+            
             const result = await WS.outgoingMessage(jsonData, socket)
             if(Array.isArray(result)){
                 for(const res of result){
