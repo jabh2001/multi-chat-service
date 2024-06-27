@@ -1,3 +1,4 @@
+import { createAuthUrlQueryParams } from "../service/api"
 import { AgentType, ContactType, ConversationType, InboxType, LabelType, TeamType } from "../types"
 import { FastMediaMessageType, FastMessageType } from "./schemas"
 
@@ -5,7 +6,8 @@ const sseURL = import.meta.env.VITE_SSE_URL
 
 export class MultiChatSSE extends EventSource {
     constructor(){
-        super(sseURL, { withCredentials:true })
+        const query = window.location.protocol  === 'https:' ? "" : `?${createAuthUrlQueryParams()}`
+        super(sseURL + query, { withCredentials:true })
     }
 
     on<EventName extends MultiChatEventName>(name:EventName, listener: (data:MultiChatEventMap[EventName]) => any){

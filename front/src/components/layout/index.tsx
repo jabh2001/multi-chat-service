@@ -5,6 +5,7 @@ import SSEProvider from '../SSEProvider';
 
 const DefaultLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
 
   return (
     <SSEProvider>

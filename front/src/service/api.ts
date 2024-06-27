@@ -24,7 +24,9 @@ const createInstance = () => {
 }
 
 let instance = createInstance()
-
+export function createAuthUrlQueryParams(){
+    return `authorization=Bearer ${getToken()}`
+}
 export async function testCookie() {
     await instance.post<{ token:string }>("/login", { "email": import.meta.env.VITE_ADMIN_EMAIL, "password": import.meta.env.VITE_ADMIN_PASSWORD })
 }
@@ -341,6 +343,14 @@ export async function getAllMessage(inboxId: InboxType["id"], conversationId: Co
     try {
         const { data } = await instance.get<{ messages: MessageType[] }>(`/inbox/${inboxId}/conversation/${conversationId}/message`, { params:{ offset } })
         return data.messages
+    } catch (e) {
+        return Promise.reject(e)
+    }
+}
+export async function leaveConversation(conversationId: ConversationType["id"]) {
+    try {
+        const { data } = await instance.put<{ conversation:{ id:typeof conversationId, assignedUserId:null } }>(`/conversation/${conversationId}/leave`)
+        return data.conversation
     } catch (e) {
         return Promise.reject(e)
     }

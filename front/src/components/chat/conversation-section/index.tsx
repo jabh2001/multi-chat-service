@@ -2,19 +2,23 @@ import useSeparatedConversations, { useInnerConversationStore } from "../../../h
 import { useMessageCount } from "../../../hooks/useMessageCount";
 import ChatsDiv from "../../../components/ChatsDiv";
 import { useMemo, useState } from "react";
+import useAuth from "../../../hooks/useAuth";
 
 export default function ConversationSection(){
+  const user = useAuth(store => store.user)
     const [tab, setTab] = useState(0)
     const search = useInnerConversationStore(store => store.search)
     const setSearch = useInnerConversationStore(store => store.setSearch)
     const { mineConversation, unassignedConversation, conversations } = useSeparatedConversations()
     const { all, mine, unassigned } = useMessageCount()
-    const allTabs = useMemo(() => [
+    const allTabs = useMemo(() => {
+      const tabs = [
         { name: 'Mine', count: mine, conversations:mineConversation },
         { name: 'Unassigned', count: unassigned, conversations:unassignedConversation },
         { name: 'All', count: all, conversations:conversations },
-
-    ], [mine, unassigned, all,  mineConversation, unassignedConversation, conversations])
+      ]
+    return user && user.role === "admin" ? tabs : tabs.slice(0, 2)
+    }, [mine, unassigned, all,  mineConversation, unassignedConversation, conversations])
     return (
       <section className="flex flex-col flex-none overflow-auto w-24  group lg:max-w-sm md:w-2/5 transition-all duration-300 ease-in-out max-h-screen">
         <div className="search-box p-4 flex-none">
@@ -53,7 +57,7 @@ export default function ConversationSection(){
 function ConversationTab({ tab, setTab, tabs }:{tab:number, setTab:(num:number) => void, tabs:Array<{ name:string, count:number|string|undefined}>}) {
     return (
       <div>
-        <div className="sm:hidden">
+        <div className="md:hidden">
           <label htmlFor="tabs" className="sr-only">
             Select a tab
           </label>
@@ -61,7 +65,7 @@ function ConversationTab({ tab, setTab, tabs }:{tab:number, setTab:(num:number) 
           <select
             id="tabs"
             name="tabs"
-            className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+            className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm text-black"
             value={tab}
             onChange={(e) => setTab(Number(e.target.value))}
           >
@@ -70,7 +74,7 @@ function ConversationTab({ tab, setTab, tabs }:{tab:number, setTab:(num:number) 
             ))}
           </select>
         </div>
-        <div className="hidden sm:block">
+        <div className="hidden md:block">
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex justify-between" aria-label="Tabs">
               {tabs.map(({name, count}, i) => (
