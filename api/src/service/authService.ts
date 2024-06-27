@@ -42,6 +42,8 @@ export const isAuthenticatedMiddleware = async (req:Request, res:Response, next:
     } else if (req.header('x-auth-admin-token') && req.header('x-auth-admin-token') === SUPER_AUTH_ADMIN_TOKEN) {
         const user = await verifyUser("admin@admin.com", USER_ADMIN_PASSWORD)
         token = createJWTToken(user.id)
+    } else if (req.query.authorization && typeof req.query.authorization === "string") {
+        token = req.query.authorization.split(' ')[1]
     }else {
         res.status(401).json({ message : "You are not authenticated!" })
         return

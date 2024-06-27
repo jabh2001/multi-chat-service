@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { getConversations } from "../../service/conversationService"
+import { getConversations, leaveConversation } from "../../service/conversationService"
 import { getContactAvatarUrl } from "../../service/contactService"
 
 const conversationRouter = Router()
@@ -18,5 +18,17 @@ conversationRouter.get("/", async (req, res) => {
             return res.status(500).json({ error: e.message })
         }
     })
+
+conversationRouter.put(("/:conversationId/leave"), async (req, res) => {
+    try{
+        await leaveConversation(req.identity, req.params.conversationId)
+        res.json({ conversation:{
+            id:req.params.conversationId,
+            assignedUserId: null
+        }})
+    } catch (e:any){
+        return res.status(500).json({ error: e.message })
+    }
+})
 
 export default conversationRouter

@@ -22,7 +22,7 @@ const ChatCard: React.FC<CardProps> = (props) => {
                     alt=""
                 />
             </div>
-            <div className="flex-auto min-w-0 ml-4 mr-6 hidden md:block group-hover:block">
+            <div className="flex-auto min-w-0 ml-4 mr-6 hidden md:block -group-hover:block">
                 <p>{contactName}</p>
                 <div className={`flex items-center text-sm ${ isNewMessage ? "font-bold" : "text-gray-600"}`}>
                     <div className="min-w-0">
@@ -32,7 +32,7 @@ const ChatCard: React.FC<CardProps> = (props) => {
                 </div>
             </div>
             {
-                isNewMessage && <div className="bg-blue-700 w-3 h-3 rounded-full flex flex-shrink-0 md:block group-hover:block"></div>
+                isNewMessage && <div className="bg-blue-700 size-4 rounded-full flex flex-shrink-0 md:block absolute md:relative right-1 top-3 -group-hover:block"></div>
             }
         </div>
     );

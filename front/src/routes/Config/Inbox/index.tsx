@@ -14,6 +14,7 @@ import InboxForm from "../../../components/form/InboxForm";
 import { deleteInbox, inboxLogout } from "../../../service/api";
 import { InboxType } from "../../../types";
 import { useDebounce } from "../../../hooks/useDebounce";
+import ConfirmTooltip from "../../../components/confirm-tooltip";
 
 function IndexPage() {
     const [ filter, setFilter ] = useState("")
@@ -123,7 +124,20 @@ function IndexPage() {
                                             </Popup>
                                         </div>
                                         <div className="col-span-1 items-center flex">
-                                            <Popup
+                                            <ConfirmTooltip onConfirm={() => handleDeleteConfirmation(inbox)}>
+                                                {
+                                                    inbox.user ? (
+                                                        <button className="btn error">
+                                                            <RightFromBracket />
+                                                        </button>
+                                                    ) : (
+                                                        <button className="btn error">
+                                                            <TrashIcon />
+                                                        </button>
+                                                    )
+                                                }
+                                            </ConfirmTooltip>
+                                            {/* <Popup
                                                 trigger={
                                                     inbox.user ? (
                                                         <button className="btn error">
@@ -141,7 +155,7 @@ function IndexPage() {
                                                     <p className="text-center">¿Estas seguro de realizar esta acción? es irreversible</p>
                                                     <button className="btn error link" onClick={() => handleDeleteConfirmation(inbox)}>Estoy seguro</button>
                                                 </div>
-                                            </Popup>
+                                            </Popup> */}
                                         </div>
                                     </div>
                                 ))}

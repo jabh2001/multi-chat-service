@@ -110,3 +110,13 @@ export async function getConversationUnreadMessageCountById(conversationId:any) 
     let query = ConversationModel.query.select(messageCount).filter(ConversationModel.c.id.equalTo(conversationId))
     return await query.fetchOneQuery<{messageCount:any}>()
 }
+
+export async function leaveConversation(user: any, conversationId: any){
+    const filter = ConversationModel.c.id.equalTo(conversationId)
+    const  conversations = await ConversationModel.query.filter(filter).fetchAllQuery<any>()
+    if(conversations && conversations.length > 0 && conversations[0].assignedUserId === user.id){
+        const conversation = conversations[0]
+        sseClients.emitToClients("update-conversation", { ...conversation, assignedUserId:null } as any)
+        await ConversationModel.update.values({ assignedUserId:null }).filter(filter).fetchAllQuery()
+    }
+}

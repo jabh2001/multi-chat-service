@@ -1,13 +1,29 @@
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import Popup from "reactjs-popup";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import SocialMediaDisplay from "../../../components/SocialMediaDisplay";
 import ContactLabelForm from "../../../components/form/ContactLabelForm";
 import LabelIcon from "../../../components/icons/LabelIcon";
 import { ContactType, LabelType } from "../../../types";
+import useAuth from "../../../hooks/useAuth";
+import { useConversationStore } from "../../../hooks/useConversations";
+import { leaveConversation } from "../../../service/api";
 // import { Badge } from "@/components/ui/badge";
 
 export default function ContactCard({ contact:contactInfo, setContactInfo }:{ contact?:ContactType, setContactInfo?:any }){
+    const conversation = useConversationStore(state => state.conversation);
+    const user = useAuth(store => store.user)
+    const teams = useAuth(store => store.teams)
+    const isAssignedToMe = useMemo(() => conversation && user && conversation.assignedUserId  === user.id, [conversation, user])
+    const isAssignedToMyTeam = useMemo(() => conversation && conversation.assignedTeamId && teams && teams.has(conversation.assignedTeamId), [conversation, teams])
+
+    const handleLeaveOfCOnversation = async () => {
+        try {
+            conversation && await leaveConversation(conversation.id)
+        } catch (e){}
+    }
+
+
     const color = useRef(labelsColors()).current
     if(!contactInfo){
         return <></>
@@ -72,6 +88,20 @@ export default function ContactCard({ contact:contactInfo, setContactInfo }:{ co
                     <ScrollBar orientation="horizontal" />
                 </ScrollArea>
             </div>
+            {
+                ( isAssignedToMe && (
+                    <div className="px-4 text-center pt-4 text-xl">
+                        <p>Este chat esta asignado a ti, puedes liberar el chat <button onClick={handleLeaveOfCOnversation} className="btn primary sm mx-2">Aquí</button></p>
+                    </div>
+                ))
+            }
+            {
+                ( isAssignedToMyTeam && (
+                    <div className="px-4 text-center pt-4 text-xl">
+                        <p>Este chat esta asignado a tu equipo</p>
+                    </div>
+                ))
+            }
         </div>
     )
 }
