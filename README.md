@@ -12,3 +12,6 @@ verificar que tenga una version de node instalada superior o igual a 16.0 puedes
 -  en el front mover a la carpeta front el archivo .env que se le facilitará por dm
 -  correr ambas instacias (front, api) con `npm run dev:api` luego `npm run dev:front`
 -  el proyecto debería funcionar correctamente
+# puesta en producción
+-  en la carpeta root correr los scripts `npm run build:api` luego `npm run build:front` en ese orden
+-  luego el script `npm run serve`
